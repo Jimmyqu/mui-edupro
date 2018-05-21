@@ -1,25 +1,25 @@
 {
-	"main.html": {
-		"refer": [
-			"setting.html",
-			"indexTab/home.html",
-			"indexTab/my.html",
-			"indexTab/classType.html",
-			"indexTab/setting.html"
-		],
-		"resources": [
-			"setting.html"
-		]
-	},
-	"login.html": {
-		"refer": [
-			"main.html",
-			"reg.html"
-		]
-	},
-	"indexTab/home.html": {
-		"refer": [
-			"secondsPage/homeChird.html"
-		]
-	}
+  "main.html": {
+    "refer": [
+      "setting.html",
+      "indexTab/home.html",
+      "indexTab/my.html",
+      "indexTab/classType.html",
+      "indexTab/setting.html"
+    ],
+    "resources": [
+      "setting.html"
+    ]
+  },
+  "login.html": {
+    "refer": [
+      "main.html",
+      "reg.html"
+    ]
+  },
+  "indexTab/home.html": {
+    "refer": [
+      "secondsPage/homeChird.html"
+    ]
+  }
 }

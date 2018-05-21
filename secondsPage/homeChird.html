@@ -195,23 +195,56 @@
 					<div class="mui-input-row">
 						<input id='contact' type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系你 )" />
 					</div>
-					<button id='submit' type="button" class="mui-btn mui-btn-green">提交</button>
+					<button id='submit' type="button" class="mui-btn mui-btn-green">
+						<a href="#feedbackDeeper">
+							提交
+						</a>
+
+					</button>
 				</div>
-				<p>此示例基于环信 “WebIM SDK” + 环信 “移动客服” 实现，在环信 “移动客服面板” 能够查阅反馈信息。</p>
 			</div>
+
+		<!--feedback deeper singo page-->
+		<div id="feedbackDeeper" class="mui-page feedback">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>设置
+				</button>
+				<h1 class="mui-center mui-title">feedback deeper</h1>
+			</div>
+			<div class="mui-page-content">
+				<p>feedback deeper</p>
+			</div>
+		</div>
+
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/mui.view.js"></script>
 		
 		<script type="text/javascript">
 			mui.init()
+
+			//设置默认单页面
 			var viewApi = mui('#app').view({
 			defaultPage: '#setting'
 		});
 		
 		 //初始化单页的区域滚动
 		mui('.mui-scroll-wrapper').scroll();
-		
-		
+
+		mui.plusReady(function(){
+			var oldBack = mui.back;
+			var view = viewApi.view;
+			console.log(viewApi.canBack())
+			mui.back = function() {
+				if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+
+
+		})
 				
 			
 		</script>
