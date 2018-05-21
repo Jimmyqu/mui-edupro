@@ -197,10 +197,10 @@
 					"fonts/mui.ttf",
 					"js/mui.min.js",
 					"js/app.js",
-					"setting.html"
+					"setting.html",
+					"indexTab/home.html"
 				],
 				"refer": [
-					"indexTab/home.html",
 					"indexTab/my.html",
 					"indexTab/classType.html",
 					"indexTab/setting.html"

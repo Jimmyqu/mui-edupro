@@ -165,15 +165,14 @@
             }
 
 			.img-container{
-				background: #2AC845;
 				width: 25%;
 				height: 0;
 				padding-bottom: 25%;
 				border: 1px solid salmon;
 			}
 			#img-item{
-				width: 100%;
-				height: 100%;
+				width: 80px;
+				height: 80px;
 			}
 		</style>
 	</head>
@@ -217,10 +216,10 @@
 		        </a>
 		    </li>
 		</ul>
-			<div class="img-container" >
+			<div class="img-container mui-content-padded" >
 				<img id='img-item' src="" alt="" />
 			</div>
-		    
+		    1212121
 		</div>
 		
 		
@@ -228,20 +227,33 @@
 		<script src="../js/mui.view.js"></script>
 		<script>
 			mui.init()
+			
 		
+						
 			mui.plusReady(function(){
-				
+				 // 获取图片地址列表
+				  const urls=[]
+				  // 监听图片的点击
+				  mui('body').on('tap', 'img', function() {
+				    console.log(urls)
+				    urls.length>0?plus.nativeUI.previewImage(urls, {
+				      current: 0,
+				      loop: false,
+				      indicator: 'number'
+				    }):null;
+				  });
 				
 				//拍照
 		        function getImage() {
 		            var c = plus.camera.getCamera();
-		            console.log(222222)
+		           
 		            c.captureImage(function(e) {
 		                plus.io.resolveLocalFileSystemURL(e, function(entry) {
 		                    var s = entry.toLocalURL() + "?version=" + new Date().getTime();
-		                    console.log("imgPath = "+s)
+		                   
 		                    	
 		                		mui('#img-item')[0].src=s
+		                		
 		                    //uploadHead(s); /*上传图片*/
 		                }, function(e) {
 		                    console.log("读取拍照文件错误：" + e.message);
@@ -255,8 +267,8 @@
 				
 				//本地相册选择
 		        function galleryImg() {
+		        	
 		            plus.gallery.pick(function(a) {
-		            		console.log(1111111)
 		                plus.io.resolveLocalFileSystemURL(a, function(entry) {
 		                    plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
 		                        root.getFile("head.png", {}, function(file) {
@@ -264,8 +276,11 @@
 		                            file.remove(function() {
 		                                console.log("file remove success");
 		                                entry.copyTo(root, 'head.png', function(e) {
+		                                		urls.push(e.fullPath) //添加到预览图
 		                                        var e = e.fullPath + "?version=" + new Date().getTime();
-		                                        uploadHead(e); /*上传图片*/
+		                                        mui('#img-item')[0].src=e
+		                                     	console.log(e)
+		                                        //uploadHead(e); /*上传图片*/
 		                                        //变更大图预览的src
 		                                        //目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
 		                                    },

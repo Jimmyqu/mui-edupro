@@ -70,14 +70,17 @@
 					{  
 						url: 'indexTab/classType.html', 
 					    id:'classType', 
+					
 					},
 					{  
 						url: 'indexTab/setting.html', 
 					    id:'setting', 
+					   
 					},
 					{  
 						url: 'indexTab/my.html', 
 					    id:'my', 
+					  
 					},
 					
 				]
@@ -87,19 +90,19 @@
 				
 				
 				$.plusReady(function() {
-					
-					const navs=['indexTab/home.html','indexTab/classType.html','indexTab/setting.html','indexTab/my.html']	
+					const navs=['indexTab/home.html','indexTab/classType.html','indexTab/setting.html','indexTab/my.html']
+					const navs_style={  
+				   				top:'45px',  //子页面样式
+				   				bottom:'45px'
+				   			}
 					const Index=0
-					var FartherPage=plus.webview.currentWebview();	
-					console.log(FartherPage)
+					var FartherPage=plus.webview.currentWebview();	//main页面
+					
 					for (var i in navs){
 				   		var pages=plus.webview.create(
 				   			navs[i],  //创建的子页面url
 				   			navs[i],  //创建的子页面id
-				   			{  
-				   				top:'45px',  //子页面样式
-				   				bottom:'45px'
-				   			}
+				   			navs_style
 				   		)
 				   		if(i!==Index){     //出第一页面外
 				   			pages.hide()  //隐藏其他页面
@@ -108,7 +111,7 @@
 				   	}
 					
 					
-					var activeTab = FartherPage[Index]
+					var activeTab = FartherPage[0]
 					var	title=document.querySelector(".mui-title");
 					mui('#nav').on('tap', 'a', function(e) {
 						//获取目标子页的id
@@ -118,21 +121,25 @@
 						}
 						//更换标题
 						title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
-						//显示目标选项卡
-						plus.webview.show(targetTab);
-						//隐藏当前选项卡
-						plus.webview.hide(activeTab);
 						//更改当前活跃的选项卡
 						activeTab = targetTab;
+						//隐藏当前选项卡
+						plus.webview.hide(activeTab);
+						//显示目标选项卡
+						plus.webview.show(targetTab,'fade-in');
+						
+						
 					});
 					
 					
 					
 					//预载setting页面
-					var settingPage = $.preload({
-						"id": 'setting',
-						"url": 'setting.html'
-					});
+					var settingPage = $.preload(
+						{
+							"id": 'setting',
+							"url": 'setting.html'
+						}
+					);
 					//设置
 					var settingButton = doc.getElementById('setting');
 					//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
