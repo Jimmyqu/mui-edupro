@@ -5,7 +5,8 @@
 			"indexTab/home.html",
 			"indexTab/my.html",
 			"indexTab/classType.html",
-			"indexTab/setting.html"
+			"indexTab/setting.html",
+			"indexTab/scroe.html"
 		],
 		"resources": [
 			"setting.html",
@@ -15,12 +16,29 @@
 	"login.html": {
 		"refer": [
 			"main.html",
-			"reg.html"
+			"reg.html",
+			"forget_password.html"
 		]
 	},
 	"indexTab/home.html": {
 		"refer": [
-			"secondsPage/homeChird.html"
+			"secondsPage/homeChird.html",
+			"secondsPage/adDetail.html"
+		]
+	},
+	"indexTab/classType.html": {
+		"refer": [
+			"secondsPage/homeChird.html",
+			"secondsPage/classTypeChirld.html"
+		]
+	},
+	"indexTab/scroe.html": {
+		"refer": [
+			"secondsPage/scroeAbout.html",
+			"secondsPage/settingBind.html",
+			"secondsPage/settingPassword.html",
+			"secondsPage/settingClass.html",
+			"login.html"
 		]
 	}
 }

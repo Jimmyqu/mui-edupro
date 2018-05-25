@@ -7,10 +7,80 @@
 		
 		<link rel="stylesheet" href="../css/mui.min.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<style>
+			.view-container{
+				padding-bottom: 20px;
+			}
+			.mui-table{
+				width: 90%;
+				margin: 10px auto;
+			}
+			th{
+				height: 55px;
+				border: 1px solid #999999;
+				color: #333366;
+			}
+			td{
+				border: 1px solid #999999;
+				height: 55px;
+				font-size: 12px;
+				text-align: center;
+				overflow: hidden;
+				word-wrap:break-word;
+				line-height: 1;
+			}
+			.img-container{
+				padding-top: 40px;
+				
+			}
+			.img-container >#img-box{
+				display: flex;
+				justify-content: center;
+			}
+			
+			.img-container img{
+				margin: 20 auto;
+			}
+			.img-container h4{
+				text-align: center;
+			}
+			.img-container p{
+				text-align: center;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="mui-content">
-			<button type="button" class="mui-btn mui-btn-blue">按钮</button>
+				
+		    <div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="view-container">
+						<div class="img-container">
+							<div id='img-box'>
+								<img src="../images/user-photo.png" alt="" />
+							</div>
+							
+							<h4>name</h4>
+							<p>專業啊實打實</p>
+						</div>
+						<div>
+							<table class="mui-table">
+							    <thead class="mui-table-header">
+							        <tr style="background-color: #ABCDEF;">
+							        	<th>科目</th>
+							            <th>平時</th>
+							            <th>期中</th>
+							            <th>期末</th>
+							        </tr>
+							    </thead>
+							    <tbody class="table-tbody" id='tbody'>
+							       
+							    </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>	
 		</div>
 		
 		
@@ -19,6 +89,62 @@
 		<script>
 			mui.init()
 		
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			
+			//數據
+			const scoreUrl ='http://47.104.236.86/CollegeManager/api/user/queryScore'
+			mui.post(scoreUrl,{
+					userId:'119'
+				},function(data){
+					let scoreData=data.data
+					let tbody=mui('#tbody')[0]
+					console.log(JSON.stringify(scoreData))
+					for(let i in scoreData){
+						let tr=document.createElement('tr')
+						tr.className='tr'
+						for(let item in scoreData[i]){
+							if(item=='subject'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(scoreData[i][item]))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+
+						}
+						for(let item in scoreData[i]){
+							if(item=='peacetime'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(1))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+						}
+						
+						for(let item in scoreData[i]){
+							if(item=='midterm'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(2))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+						}
+						for(let item in scoreData[i]){
+							if(item=='midterm'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(3))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+						}
+						
+						
+					}
+				},'json'
+			);
+			
+			
 		</script>
 	</body>
 </html>

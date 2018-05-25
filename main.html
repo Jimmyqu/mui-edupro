@@ -16,15 +16,18 @@
 				padding: 10px;
 			}
 			.main-header{
-				background-color: #8a6de9;
+				background-color: #015198;
+			}
+			.mui-title{
+				color: #fff;
 			}
 		</style>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav main-header" style="padding-right: 15px;">
-			<h1 class="mui-title">登录模板</h1>
-			<button id='setting' class=" mui-pull-right mui-btn-link">设置</button>
+			<h1 class="mui-title">首页</h1>
+			
 		</header>
 		
 		
@@ -35,11 +38,11 @@
 		    </a>
 		    <a class="mui-tab-item"  href="indexTab/classType.html">
 		        <span class="mui-icon mui-icon-phone"></span>
-		        <span class="mui-tab-label">电话</span>
+		        <span class="mui-tab-label">课表</span>
 		    </a>
-		    <a class="mui-tab-item" href="indexTab/setting.html">
+		    <a class="mui-tab-item" href="indexTab/scroe.html">
 		        <span class="mui-icon mui-icon-email"></span>
-		        <span class="mui-tab-label">邮件</span>
+		        <span class="mui-tab-label">成绩</span>
 		    </a>
 		    <a class="mui-tab-item" href="indexTab/my.html">
 		        <span class="mui-icon mui-icon-gear"></span>
@@ -70,27 +73,25 @@
 					{  
 						url: 'indexTab/classType.html', 
 					    id:'classType', 
-					
 					},
 					{  
-						url: 'indexTab/setting.html', 
-					    id:'setting', 
-					   
+						url: 'indexTab/scroe.html', 
+					    id:'scroe', 
 					},
 					{  
 						url: 'indexTab/my.html', 
 					    id:'my', 
-					  
 					},
 					
 				]
 				});
 				
+				
 				var settings = app.getSettings();
 				
 				
 				$.plusReady(function() {
-					const navs=['indexTab/home.html','indexTab/classType.html','indexTab/setting.html','indexTab/my.html']
+					const navs=['indexTab/home.html','indexTab/classType.html','indexTab/scroe.html','indexTab/my.html']
 					const navs_style={  
 				   				top:'45px',  //子页面样式
 				   				bottom:'45px'
@@ -109,8 +110,6 @@
 				   		}
 				   		FartherPage.append(pages)  //添加子页面
 				   	}
-					
-					
 					var activeTab = FartherPage[0]
 					var	title=document.querySelector(".mui-title");
 					mui('#nav').on('tap', 'a', function(e) {
@@ -127,42 +126,13 @@
 						plus.webview.hide(activeTab);
 						//显示目标选项卡
 						plus.webview.show(targetTab,'fade-in');
-						
-						
 					});
 					
-					
-					
-					//预载setting页面
-					var settingPage = $.preload(
-						{
-							"id": 'setting',
-							"url": 'setting.html'
-						}
-					);
-					//设置
-					var settingButton = doc.getElementById('setting');
-					//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
-					settingButton.addEventListener('tap', function(event) {
-						$.openWindow({
-							id: 'setting',
-							show: {
-								aniShow: 'pop-in'
-							},
-							styles: {
-								popGesture: 'hide'
-							},
-							waiting: {
-								autoShow: false
-							}
-						});
-					});
-					
-					
-					//--
+					//返回鍵
 					$.oldBack = mui.back;
 					var backButtonPress = 0;
 					$.back = function(event) {
+						
 						backButtonPress++;
 						if (backButtonPress > 1) {
 							plus.runtime.quit();
@@ -174,6 +144,36 @@
 						}, 1000);
 						return false;
 					};
+					
+					plus.storage.setItem('name', 'Jimmy');
+					
+//					//预载setting页面
+//					var settingPage = $.preload(
+//						{
+//							"id": 'setting',
+//							"url": 'setting.html'
+//						}
+//					);
+					//设置
+//					var settingButton = doc.getElementById('setting');
+//					//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
+//					settingButton.addEventListener('tap', function(event) {
+//						$.openWindow({
+//							id: 'setting',
+//							show: {
+//								aniShow: 'pop-in'
+//							},
+//							styles: {
+//								popGesture: 'hide'
+//							},
+//							waiting: {
+//								autoShow: false
+//							}
+//						});
+//					});
+					
+					
+					
 				});
 			}(mui, document));
 		</script>

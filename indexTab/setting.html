@@ -7,17 +7,65 @@
 		
 		<link rel="stylesheet" href="../css/mui.min.css" />
 		<link rel="stylesheet" href="../css/style.css" />
-	</head>
-	<body>
-		<div class="mui-content">
-		   <p>setting</p>
-		</div>
+		 <style> 
+            #map { 
+            	width: 200px;
+               flex: 1;
+               background-color:'red' ;
+            } 
+        </style> 
+    </head> 
+ 
+    <body> 
+        <div class="mui-content"> 
+        	<div style="display: flex;flex-direction: column;height: 500px;">
+        		<div style="flex: 1;background-color: #007AFF;" ></div>
+        		<div style="flex: 2;background-color: indianred;"></div>
+        		<div id="map"> 
+            </div> 
+        	</div>
+            
+        </div> 
 		
 		<script src="../js/mui.min.js"></script>
-		
+		 <!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=4twEdxjEte3nVaIQFZrCHo8tS0pmvoOi"></script> 
+		 <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script> -->
 		<script>
 			mui.init()
-			mui.toast("setting")
+		
 		</script>
+		<script type="text/javascript">
+			
+			mui.plusReady(function() {
+				//渲染到元素
+               new plus.maps.Map("map");
+               
+               //获取位置信息 getCurrentPosition(succCB,failCB,{配置信息})
+               plus.geolocation.getCurrentPosition(
+               	(pos)=>{console.log(JSON.stringify(pos))}, function(e) {
+		            mui.toast("获取定位位置信息失败：" + e.message);
+		        }, {
+		            geocode: true,
+		            provider:'baidu'
+		            
+		        });
+		        
+//		        setInterval(()=>{
+//		        	plus.geolocation.getCurrentPosition(
+//             	(pos)=>{console.log(JSON.stringify(pos))}, function(e) {
+//		            mui.toast("获取定位位置信息失败：" + e.message);
+//		        }, {
+//		            geocode: true,
+//		            provider:'baidu'
+//		            
+//		        });
+//		        },1000)
+            
+              
+            })    
+		</script>
+		
+		
+		
 	</body>
 </html>

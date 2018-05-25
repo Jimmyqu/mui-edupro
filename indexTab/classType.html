@@ -7,17 +7,155 @@
 		
 		<link rel="stylesheet" href="../css/mui.min.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<style>
+			.mui-table{
+				width: 90%;
+				margin: 10px auto;
+			}
+			th{
+				height: 55px;
+				border: 1px solid #999999;
+				color: #333366;
+			}
+			
+			td{
+				border: 1px solid #999999;
+				height: 60px;
+				font-size: 12px;
+				text-align: center;
+				overflow: hidden;
+				word-wrap:break-word;
+				line-height: 1;
+			}
+			.toClassDetail{
+				
+			}
+		</style>
 	</head>
 	<body>
+		
 		<div class="mui-content">
-		   <p>type</p>
+			
+		    <div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--这里放置真实显示的DOM内容-->
+					
+					<table class="mui-table">
+					    <thead class="mui-table-header">
+					        <tr style="background-color: #ABCDEF;">
+					        	<th>月份</th>
+					            <th>周一</th>
+					            <th>周二</th>
+					            <th>周三</th>
+					            <th>周四</th>
+					            <th>周五</th>
+					        </tr>
+					    </thead>
+					    <tbody class="table-tbody">
+					        <tr class='tr'>
+					            <td>第一节</td>
+					        </tr>
+					        <tr class='tr'>
+					            <td>第二节</td>
+					        </tr>
+					        <tr class='tr'>
+					            <td>第三节</td>
+					        </tr>
+					        <tr class='tr'>
+					           <td>第四节</td>
+					        </tr>
+					         <tr class='tr'>
+					           <td>第五节</td>
+					        </tr>
+					         <tr class='tr'>
+					           <td>第六节</td>
+					        </tr>
+					         <tr class='tr'>
+					           <td>第七节</td>
+					        </tr>
+					         <tr class='tr'>
+					           <td>第八节</td>
+					        </tr>
+					    </tbody>
+					</table>
+				</div>
+			</div>
+		
 		</div>
 		
 		<script src="../js/mui.min.js"></script>
 		
 		<script>
+			const url='http://47.104.236.86/CollegeManager/api/course/courseTable'
 			mui.init()
 			
+			
+			
+			
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			
+			mui.post(url,{
+					courseId:'30',
+					userId:'119'
+				},function(data){
+					//拼接数据
+					var allData=data.data
+					var wapper=[[],[],[],[],[],[],[],[]]
+					for(let i in allData){
+						for(let j in allData[i].courseList){
+							for (let k =0,len=9;k<len;k++){
+		                        if (allData[i].courseList[j].turnNumber === k+1) {
+		                            wapper[k].push({
+		                                title: allData[i].courseList[j].title,
+		                                courseId: allData[i].courseList[j].id
+		                            })
+		                        }
+		                    }
+						}
+					}
+					
+					var trList=document.getElementsByClassName('tr')
+					for(let j=0;j< trList.length;j++){
+						var tr=trList[j]
+						for(let i in [1,2,3,4,5]){
+							var td=document.createElement('td')
+							td.className='toClassDetail'
+							
+							td.appendChild(document.createTextNode(wapper[j][i].title))
+							td.dataset.courseId=wapper[j][i].courseId //添加自定义属性
+							tr.appendChild(td)
+						}
+					}
+					
+					
+				},'json'
+			);
+			
+		
+			
+			mui.plusReady(function() {
+				
+				//批量绑定事件 跳转子页面
+				mui('table').on('tap','.toClassDetail',function(){
+					let title=this.innerText
+					let courseId=this.dataset.courseId
+					 mui.openWindow({
+					     url: '../secondsPage/classTypeChirld.html',
+					     id:'classTypeCirld.html',
+						extras:{
+							classTitle:title,
+							courseId:courseId
+						},
+						 waiting:{
+					      autoShow:false,//自动显示等待框，默认为true
+					  }
+					});
+				})
+				
+			
+			})
 		</script>
 	</body>
 </html>

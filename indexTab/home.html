@@ -7,6 +7,7 @@
 		
 		<link rel="stylesheet" href="../css/mui.min.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 		<style>
 			.mui-preview-image.mui-fullscreen {
                 position: fixed;
@@ -174,64 +175,122 @@
 				width: 80px;
 				height: 80px;
 			}
+			.img-box{
+				height: 200px;
+			}
+			.img-box>img{
+				width: 100%;
+				height: 200px;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="mui-content">
-		    <ul class="mui-table-view mui-grid-view mui-grid-9">
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-		        <a href="#" id='test'>
-		            <span class="mui-icon mui-icon-home"></span>
-		            <div class="mui-media-body">Home</div>
-		        </a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-		        <a href="#" id='pic'>
-		            <span class="mui-icon mui-icon-email"><span class="mui-badge mui-badge-red">5</span></span>
-		            <div class="mui-media-body">Email</div>
-		        </a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-		        <a href="#">
-		            <span class="mui-icon mui-icon-chatbubble"></span>
-		            <div class="mui-media-body">Chat</div>
-		        </a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-		        <a href="#">
-		            <span class="mui-icon mui-icon-location"></span>
-		            <div class="mui-media-body">Location</div>
-		        </a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-		        <a href="#">
-		            <span class="mui-icon mui-icon-search"></span>
-		            <div class="mui-media-body">Search</div>
-		        </a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-		        <a href="#">
-		            <span class="mui-icon mui-icon-phone"></span>
-		            <div class="mui-media-body">Phone</div>
-		        </a>
-		    </li>
-		</ul>
-			<div class="img-container mui-content-padded" >
-				<img id='img-item' src="" alt="" />
-			</div>
-		    1212121
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div>
+						<div class="swiper-container">
+						    <div class="swiper-wrapper" id='imgBox'>
+						    </div>
+						    <!-- 如果需要分页器 -->
+						    <div class="swiper-pagination"></div>
+						</div>
+					</div>
+					<div>
+						<!--<video controls="controls" style="width: 100%;" poster="http://img.58cdn.com.cn/ui8/house/detail/images/newdefaultPic@2x.png?w=640&h=480&crop=1">
+							<source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4"></source>
+							当前浏览器不支持 video直接播放，点击这里下载视频： <a href="myvideo.webm">下载视频</a>
+						</video>-->
+					</div>
+				</div>	
+			</div>		
 		</div>
 		
 		
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/mui.view.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>	
 		<script>
-			mui.init()
+			const swiperUrl = 'http://47.104.236.86/CollegeManager/api/index/noticeList'
+			const todayClassUrl ='http://47.104.236.86/CollegeManager/api/index/todayCourseList';
+			const uploadPositionUrl ='http://47.104.236.86/CollegeManager/api/user/uploadPosition';
 			
-		
-						
+			mui.init()	       
+			
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.05 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			
+			//轮播图
+			mui.post(swiperUrl,{
+				},function(data){
+					let imgData= data.data
+					let imgBox=document.getElementById('imgBox')
+					let dom=''
+					for(let i in imgData){
+						//傳遞屬性
+						if(imgData[i].image.url){
+							dom+=
+						`<div class="swiper-slide">
+				        	<div class="img-box">
+				        		<img data-content='${imgData[i].content}' data-title='${imgData[i].title}' src="${imgData[i].image.url}" alt="" />
+				        	</div>
+						 </div>`
+						}else{
+							dom+=
+						`<div class="swiper-slide">
+				        	<div class="img-box">
+				        		<img data-content='${imgData[i].content}' data-title='${imgData[i].title}' src="../images/1.jpg" alt="" />
+				        	</div>
+						 </div>`
+						}
+					}
+					imgBox.innerHTML=dom
+					//異步加載完成后再調用初始化，在外部會初始化失敗
+					var mySwiper = new Swiper ('.swiper-container', {
+					    direction: 'horizontal',
+					    loop: true,
+					    
+					    // 如果需要分页器
+					    pagination: {
+					      el: '.swiper-pagination',
+					    },
+					}) 
+					//end
+				},'json'
+			);
+			
+			
+			mui.post(todayClassUrl,{
+					userId:'119'
+				},function(data){
+					console.log(JSON.stringify(data))
+				},'json'
+			);
+			
 			mui.plusReady(function(){
-				 // 获取图片地址列表
+				
+				//批量绑定事件 跳转子页面
+				mui('#imgBox').on('tap','img',function(){
+					console.log(this.src)
+					mui.openWindow({
+					     url: '../secondsPage/adDetail.html',
+					     id:'adDetail.html',
+						extras:{
+							title:this.dataset.title,
+							content:this.dataset.content,
+							imgUrl:this.src
+						},
+						 waiting:{
+					      autoShow:false,//自动显示等待框，默认为true
+					  }
+					});
+				})
+				
+				
+				
+				
+				 // 获取图片地址列表  原生預覽圖
 				  const urls=[]
 				  // 监听图片的点击
 				  mui('body').on('tap', 'img', function() {
@@ -242,6 +301,26 @@
 				      indicator: 'number'
 				    }):null;
 				  });
+				
+				function geoInf( position ) {
+
+					var codns = position.coords;//获取地理坐标信息；
+					var longt = codns.longitude;//获取到当前位置的经度
+					var lat = codns.latitude;//获取到当前位置的纬度；
+					//详细地址获取使用  position.address
+					mui.toast(JSON.stringify(codns))
+				
+				}
+
+
+				
+				//地理位置
+//				mui('#location')[0].addEventListener('tap',function(){
+//					//succes cb,fall cb ,配置对象{高精度，是否解析地址信息,服务提供者} 
+//					plus.geolocation.getCurrentPosition( geoInf, function (e){
+//						},{enableHighAccuracy:true,geocode:true,provider:'baidu'});
+//
+//				});
 				
 				//拍照
 		        function getImage() {
@@ -267,7 +346,6 @@
 				
 				//本地相册选择
 		        function galleryImg() {
-		        	
 		            plus.gallery.pick(function(a) {
 		                plus.io.resolveLocalFileSystemURL(a, function(entry) {
 		                    plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
@@ -310,40 +388,44 @@
 		                filter: "image"
 		            })
 		        };
-				mui('#test')[0].addEventListener('tap',function(){
-					 mui.openWindow({
-				     url: '../secondsPage/homeChird.html',
-				     id:'homeChird.html'
-				  });
-				})
+		        
+		        
+//				mui('#test')[0].addEventListener('tap',function(){
+//					 mui.openWindow({
+//				     url: '../secondsPage/homeChird.html',
+//				     id:'homeChird.html'
+//				  });
+//				})
+//
 
-				mui('#pic')[0].addEventListener('tap',function(){
-					  if (mui.os.plus) {
-		                var a = [{
-		                    title: "拍照"
-		                }, {
-		                    title: "从手机相册选择"
-		                }];
-		                plus.nativeUI.actionSheet({
-		                    title: "修改用户头像",
-		                    cancel: "取消",
-		                    buttons: a
-		                }, function(b) { /*actionSheet 按钮点击事件*/
-		                    switch (b.index) {
-		                        case 0:
-		                            break;
-		                        case 1:
-		                            getImage(); /*拍照*/
-		                            break;
-		                        case 2:
-		                            galleryImg();/*打开相册*/
-		                            break;
-		                        default:
-		                            break;
-		                    }
-		                })
-		            }
-				})
+
+//				mui('#pic')[0].addEventListener('tap',function(){
+//					  if (mui.os.plus) {
+//		                var a = [{
+//		                    title: "拍照"
+//		                }, {
+//		                    title: "从手机相册选择"
+//		                }];
+//		                plus.nativeUI.actionSheet({
+//		                    title: "修改用户头像",
+//		                    cancel: "取消",
+//		                    buttons: a
+//		                }, function(b) { /*actionSheet 按钮点击事件*/
+//		                    switch (b.index) {
+//		                        case 0:
+//		                            break;
+//		                        case 1:
+//		                            getImage(); /*拍照*/
+//		                            break;
+//		                        case 2:
+//		                            galleryImg();/*打开相册*/
+//		                            break;
+//		                        default:
+//		                            break;
+//		                    }
+//		                })
+//		            }
+//				})
 				
 				
 			})
