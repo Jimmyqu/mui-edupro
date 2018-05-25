@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>
+			#news-img{
+				height: 200px;
+			}
+			#news-content{
+				padding: 20px 15px;
+			}
+			#news-content img{
+				width: 95%;
+				margin: 0 auto;
+			}
+			.mui-bar{
+				background-color: #015198;
+			}
+			.mui-title{
+				color: #fff;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+		<!--页面主结构结束-->
+		
+		<div id="setting" class="mui-page ">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">學校新聞</h1>
+			</div>			
+			<!--页面标题栏结束-->
+			
+			<!--页面主内容区开始-->
+			
+			<div class="mui-page-content  ">
+				<!--添加滚动容器-->
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div style="margin-top: 45px;">
+							<div class="row" >
+								<img id='news-img' src="" alt="" />
+							</div>
+							<h3 id='news-title'></h3>
+							<div id='news-content'>
+								
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.view.js"></script>
+			
+		<script type="text/javascript">
+			mui.init()
+			
+				//设置默认单页面
+			var viewApi = mui('#app').view({
+				defaultPage: '#setting'
+			});
+			
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			
+			mui.plusReady(function(){
+				
+				//接受父页面传值
+				var props = plus.webview.currentWebview(); 
+				mui('#news-img')[0].src=props.imgUrl
+				mui('#news-content')[0].innerHTML=props.content
+				mui('#news-title')[0].innerText=props.title
+			})
+		</script>
+	</body>
+
+</html>
