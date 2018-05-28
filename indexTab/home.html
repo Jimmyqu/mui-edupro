@@ -264,7 +264,7 @@
 			mui.post(todayClassUrl,{
 					userId:'119'
 				},function(data){
-					console.log(JSON.stringify(data))
+					//console.log(JSON.stringify(data))
 				},'json'
 			);
 			
@@ -294,7 +294,6 @@
 				  const urls=[]
 				  // 监听图片的点击
 				  mui('body').on('tap', 'img', function() {
-				    console.log(urls)
 				    urls.length>0?plus.nativeUI.previewImage(urls, {
 				      current: 0,
 				      loop: false,

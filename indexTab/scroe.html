@@ -130,7 +130,7 @@
 				font-size: 12px;
 			}
 			.no-icon:after{
-				content: '111';
+				content: attr(data-text);
 				font-size: 12px;
 			}
 			#no-active .mui-active{
@@ -208,38 +208,41 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/loading.js"></script>
 		<script type="text/javascript">
-			mui.init()
 		
 		
+
+
+			(function(){  
+				mui.init()
+				
+				//初始化单页的区域滚动
+				mui('.mui-scroll-wrapper').scroll();
 		
-		 //初始化单页的区域滚动
-		mui('.mui-scroll-wrapper').scroll();
-
-		mui.plusReady(function(){
-            //拍照
-            function getImage() {
-                var c = plus.camera.getCamera();
-
-                c.captureImage(function(e) {
-                    plus.io.resolveLocalFileSystemURL(e, function(entry) {
-                        var s = entry.toLocalURL() + "?version=" + new Date().getTime();
-
-
-                        mui('#img-item')[0].src=s
-
-                        //uploadHead(s); /*上传图片*/
-                    }, function(e) {
-                        console.log("读取拍照文件错误：" + e.message);
-                    });
-                }, function(s) {
-                    console.log("error" + s);
-                }, {
-                    filename: "_doc/head.png"
-                })
-            }
-
-            //本地相册选择
-            function galleryImg() {
+				mui.plusReady(function(){
+	            //拍照
+	            function getImage() {
+	                var c = plus.camera.getCamera();
+	
+	                c.captureImage(function(e) {
+	                    plus.io.resolveLocalFileSystemURL(e, function(entry) {
+	                        var s = entry.toLocalURL() + "?version=" + new Date().getTime();
+	
+	
+	                        mui('#img-item')[0].src=s
+	
+	                        //uploadHead(s); /*上传图片*/
+	                    }, function(e) {
+	                        console.log("读取拍照文件错误：" + e.message);
+	                    });
+	                }, function(s) {
+	                    console.log("error" + s);
+	                }, {
+	                    filename: "_doc/head.png"
+	                })
+	            }
+	
+	            //本地相册选择
+	            function galleryImg() {
                 plus.gallery.pick(function(a) {
                     plus.io.resolveLocalFileSystemURL(a, function(entry) {
                         plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
@@ -282,10 +285,36 @@
                     filter: "image"
                 })
             };
-
-
-			(function(){  
+				
 				const url='http://47.104.236.86/CollegeManager/api/course/courseSign'
+				const infoUrl='http://47.104.236.86/CollegeManager/api/index/getInfo'
+				
+				//获取个人信息
+				mui.post(infoUrl,{
+						userId:'119'
+					},function(data){
+						
+						//console.log(JSON.stringify(data))
+						let infoData=data.data
+						let useData=[
+							infoData.name.trim(),
+							infoData.sex?'女':'男',
+							infoData.number,
+							infoData.institute['name'],
+							infoData.specialty['name'],
+							infoData.grade['name']
+						]
+						let itemList=document.getElementsByClassName('no-icon')
+						//设置data-text属性 伪元素content属性读取
+						for(let item in useData){
+							//console.log(useData[item])
+							itemList[item].dataset.text=useData[item]
+						}
+						//只能获取 不能更改
+						//console.log(window.getComputedStyle(itemList[0],':after').getPropertyValue('content'))
+						
+					},'json'
+				);
 				
 				//关于子页面
 				mui('#about')[0].addEventListener('tap',function(){
@@ -364,15 +393,15 @@
                                     break;
                                 default:
                                     break;
-                            }
-                        })
-                    }
-				})
-			})()
-		
+	                            }
+	                        })
+	                    }
+					})
+				})()
+			
 			
 		
-		})
+		})()
 				
 			
 		</script>

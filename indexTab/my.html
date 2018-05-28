@@ -100,7 +100,7 @@
 				},function(data){
 					let scoreData=data.data
 					let tbody=mui('#tbody')[0]
-					console.log(JSON.stringify(scoreData))
+					
 					for(let i in scoreData){
 						let tr=document.createElement('tr')
 						tr.className='tr'
@@ -116,7 +116,7 @@
 						for(let item in scoreData[i]){
 							if(item=='peacetime'){
 								let td=document.createElement('td')
-								td.appendChild(document.createTextNode(1))
+								td.appendChild(document.createTextNode(scoreData[i][item]))
 								tr.appendChild(td)
 								tbody.append(tr)
 							}
@@ -125,7 +125,7 @@
 						for(let item in scoreData[i]){
 							if(item=='midterm'){
 								let td=document.createElement('td')
-								td.appendChild(document.createTextNode(2))
+								td.appendChild(document.createTextNode(scoreData[i][item]))
 								tr.appendChild(td)
 								tbody.append(tr)
 							}
@@ -133,7 +133,7 @@
 						for(let item in scoreData[i]){
 							if(item=='midterm'){
 								let td=document.createElement('td')
-								td.appendChild(document.createTextNode(3))
+								td.appendChild(document.createTextNode(scoreData[i][item]))
 								tr.appendChild(td)
 								tbody.append(tr)
 							}

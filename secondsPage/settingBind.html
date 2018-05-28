@@ -13,6 +13,17 @@
 			.mui-title{
 				color: #fff;
 			}
+			#timeBtn{
+				position: absolute;
+				top:5px;
+				right: 5px;
+				height: 30px;
+				font-size: 10px;
+				text-align: center;
+				line-height:1;
+				width: 100px;
+				
+			}
 		</style>
 	</head>
 
@@ -50,7 +61,13 @@
 								<p style="margin-top: 70px;">问题描述或建议:</p>
 							</div>
 							<div class="row mui-input-row">
-								<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
+								<div class="mui-input-row">
+								    <input id='mobile' style="margin-bottom: 0;border-bottom: 0;" type="text" placeholder="请输入电话号码">
+								</div>
+								<div class="mui-input-row">
+								    <input id='smsCode' type="text" placeholder="请输入验证码">
+								</div>
+								<button id='timeBtn' type="button" class="mui-btn mui-btn-blue" onclick="sendCode(this)">点击发送验证码</button>
 							</div>
 							<div style="display: flex;justify-content: center;">
 								<button id='submit'  type="button" class="mui-btn mui-btn-green toClassRate" >提交</button>
@@ -71,6 +88,82 @@
 			var viewApi = mui('#app').view({
 				defaultPage: '#setting'
 			});
+			
+			//倒计时
+			
+			let clock = '';
+		    let nums = 60;
+		    let btn;
+		    let mobile=document.getElementById('mobile')
+		    let sms=document.getElementById('smsCode')
+		    let submit=document.getElementById('submit')
+		    const smsUrl='http://47.104.236.86/CollegeManager/api/index/sendCode';
+		    const bindUrl='http://47.104.236.86/CollegeManager/api/index/bindMobile'
+		    
+		    function sendCode(thisBtn){
+		    	console.log(mobile.value)
+		    	if(mobile.value.length===11){
+			    		mui.post(smsUrl,{
+						mobile:mobile.value,
+						type:0
+						},function(data){
+							console.log(JSON.stringify(data))
+							 if(data.code===0){
+		                        mui.toast('请求成功,请查看手机')
+		                    }else if(data.code===1){
+		                        mui.toast('请求失败,请稍后再试')
+		                    }
+						}
+					)	
+					btn = thisBtn;
+			        btn.disabled = true; //将按钮置为不可点击
+			        btn.innerText = nums+'秒后重新获取';
+			        clock = setInterval(doLoop, 1000); //一秒执行一次
+		    	}else{
+		    		mui.toast('请输入正确的手机号')
+		    	}
+		      
+		    }
+		
+		    function doLoop(){
+		        nums--;
+		        if(nums > 0){
+		            btn.innerText = nums+'秒后重新获取';
+		        }else{
+		            clearInterval(clock); //清除js定时器
+		            btn.disabled = false;
+		            btn.innerText = '点击发送验证码';
+		            nums = 60; //重置时间
+		        }
+		    }
+		    //end
+		    
+		    
+		    //提交
+		    submit.addEventListener('click',function(){
+		    	console.log(mobile.value+"  "+ sms.value)
+		    	if(mobile.value&&sms.value){
+		    		mui.post(bindUrl,{
+		    			userId:'119',
+						mobile:mobile.value,
+						code:sms.value
+						},function(data){
+							console.log(JSON.stringify(data))
+							 if(data.code===0){
+		                        mui.toast('绑定成功')
+		                        mobile.value=''
+		                        sms.value=''
+		                    }else if(data.code===1){
+		                    	if(data.msg==='error_011'){
+		                    		mui.toast('验证码错误')
+		                    	}
+		                    }
+						}
+					)
+		    	}else{
+		    		mui.toast('请输入正确手机号及验证码')
+		    	}
+		    })
 		</script>
 	</body>
 

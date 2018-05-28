@@ -181,6 +181,14 @@
 			.mui-title{
 				color: #fff;
 			}
+			.mui-icon-star{
+				color: #B5B5B5;
+				font-size: 22px;
+			}
+			.mui-icon-star-filled{
+				color: #FFB400;
+				font-size: 22px;
+			} 
 		</style>
 	</head>
 	
@@ -268,6 +276,16 @@
 					<div class="row mui-input-row">
 						<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
 					</div>
+					<div class="mui-content-padded">
+						<div class="mui-inline">课程评分</div>
+						<div class="icons mui-inline" style="margin-left: 6px;">
+							<i data-index="1" class="mui-icon mui-icon-star"></i>
+							<i data-index="2" class="mui-icon mui-icon-star"></i>
+							<i data-index="3" class="mui-icon mui-icon-star"></i>
+							<i data-index="4" class="mui-icon mui-icon-star"></i>
+							<i data-index="5" class="mui-icon mui-icon-star"></i>
+						</div>
+					</div>
 					<div style="display: flex;justify-content: center;">
 						<button id='submit'  type="button" class="mui-btn mui-btn-green toClassRate">提交</button>
 					</div>
@@ -307,6 +325,7 @@
 			
 			(function(){  
 				const courseInfoUrl='http://47.104.236.86/CollegeManager/api/course/courseInfo';
+				const rateUrl='http://47.104.236.86/CollegeManager/api/course/courseEvaluate'
 				const url='http://47.104.236.86/CollegeManager/api/course/courseSign'
 				//判断是否在子页面 返回键
 				var oldBack = mui.back;
@@ -336,7 +355,7 @@
 					},
 					function(data){
 						mui.hideLoading()
-						console.log(JSON.stringify(data))
+						
 						let classInfo=data.data
 						
 						let html=`${classInfo.teacher.name}
@@ -365,6 +384,60 @@
 					
 				})
 				
+				//教师 星星
+				
+				var starIndex = 0;
+				 mui('.icons').on('tap','i',function(){
+				  	var index = parseInt(this.getAttribute("data-index"));
+				  	var parent = this.parentNode;
+				  	var children = parent.children;
+				  	if(this.classList.contains("mui-icon-star")){
+				  		for(var i=0;i<index;i++){
+			  				children[i].classList.remove('mui-icon-star');
+			  				children[i].classList.add('mui-icon-star-filled');
+				  		}
+				  	}else{
+				  		for (var i = index; i < 5; i++) {
+				  			children[i].classList.add('mui-icon-star')
+				  			children[i].classList.remove('mui-icon-star-filled')
+				  		}
+				  	}
+				  	starIndex = index;
+			  });
+				
+				
+				
+				
+				//课程评价
+				let question=mui('#question')[0]
+				let submit=mui('#submit')[0]
+				submit.addEventListener('click',function(){
+					
+					if(question.value){
+						mui.post(rateUrl,{
+			    			userId:'119',
+			    			courseId:props.courseId,
+							content:question.value,
+							score:starIndex
+							},function(data){
+								
+								 if(data.code===0){
+			                        mui.toast('评价成功')
+			                        question.value=''
+			                       
+			                    }else if(data.code===1){
+			                    	if(data.msg==='error_014'){
+			                    		mui.toast('评价成功')
+			                    		return
+			                    	}
+			                    	 mui.toast('评价失败')
+			                    }
+							}
+						)
+					}else{
+						mui.toast('请输入内容')
+					}
+				})
 			})()
 		
 			

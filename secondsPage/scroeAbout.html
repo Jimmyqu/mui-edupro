@@ -76,13 +76,37 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/mui.view.js"></script>
 		<script type="text/javascript">
+			const feedbackUrl='http://47.104.236.86/CollegeManager/api/index/submitFeedback'
+			let question=mui('#question')[0]
+			let submit=mui('#submit')[0]
 			mui.init()
 			
 				//设置默认单页面
 			var viewApi = mui('#app').view({
 				defaultPage: '#setting'
 			});
-		
+			
+			submit.addEventListener('click',function(){
+				if(question.value){
+					mui.post(feedbackUrl,{
+		    			userId:'119',
+						content:question.value
+						},function(data){
+							console.log(JSON.stringify(data))
+							 if(data.code===0){
+		                        mui.toast('发送成功')
+		                        question.value=''
+		                       
+		                    }else if(data.code===1){
+		                    	 mui.toast('发送失败')
+		                    }
+						}
+					)
+				}else{
+					mui.toast('请输入内容')
+				}
+			})
+			
 		</script>
 	</body>
 
