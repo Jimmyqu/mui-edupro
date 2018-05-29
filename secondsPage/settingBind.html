@@ -24,6 +24,20 @@
 				width: 100px;
 				
 			}
+			#logo-content{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 20px 0;
+			}
+			#logo{
+				width: 50%;
+			}
+			.toClassRate{
+				margin: 20px auto;
+				width: 80%;
+				font-size: 14px;
+			}
 		</style>
 	</head>
 
@@ -58,7 +72,9 @@
 					<div class="mui-scroll">
 						<div style="margin-top: 45px;">
 							<div class="row" >
-								<p style="margin-top: 70px;">问题描述或建议:</p>
+								<div id='logo-content'>
+									<img id='logo' src="../images/logo.png" alt="" />
+								</div>
 							</div>
 							<div class="row mui-input-row">
 								<div class="mui-input-row">
@@ -141,10 +157,10 @@
 		    
 		    //提交
 		    submit.addEventListener('click',function(){
-		    	console.log(mobile.value+"  "+ sms.value)
+		    	
 		    	if(mobile.value&&sms.value){
 		    		mui.post(bindUrl,{
-		    			userId:'119',
+		    			userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
 						mobile:mobile.value,
 						code:sms.value
 						},function(data){

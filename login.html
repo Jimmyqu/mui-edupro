@@ -54,7 +54,21 @@
 				padding: 0px 8px;
 			}
 			
-	
+			#logo-content{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 20px 0;
+			}
+			#logo{
+				width: 50%;
+			}
+			.mui-bar{
+				background-color: #015198;
+			}
+			.mui-title{
+				color: #fff;
+			}
 		</style>
 
 	</head>
@@ -64,30 +78,33 @@
 			<h1 class="mui-title">登录</h1>
 		</header>
 		<div class="mui-content">
+			<div id='logo-content'>
+				<img id='logo' src="images/logo.png" alt="" />
+			</div>
 			<form id='login-form' class="mui-input-group">
 				<div class="mui-input-row">
-					<label>账号</label>
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+				    <input id='account' style="margin-bottom: 0;border-bottom: 0;" type="text" placeholder="请输入账号">
 				</div>
 				<div class="mui-input-row">
-					<label>密码</label>
-					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				    <input id='password' type="text" placeholder="请输入密码">
 				</div>
 			</form>
 			
 			
 			<div class="mui-content-padded">
 				<button id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
-				<div class="link-area"><a id='reg'>注册账号</a> <span class="spliter">|</span> <a id='forgetPassword'>忘记密码</a>
+				<div class="link-area"><a id='reg'>注册账号</a> 
 				</div>
 			</div>
 			
 		</div>
 		<script src="js/mui.min.js"></script>
 		<script src="js/mui.enterfocus.js"></script>
+		<script src="js/md5.js"></script>
 		<script src="js/app.js"></script>
 		<script>
 			(function($, doc) {
+				
 				$.init({
 					statusBarBackground: '#f7f7f7'
 				});
@@ -128,6 +145,10 @@
 					} else {
 						
 					}
+					
+					
+					//
+					
 					
 					
 					// close splash
@@ -184,22 +205,22 @@
 						});
 					}, false);
 					
-					forgetButton.addEventListener('tap', function(event) {
-						$.openWindow({
-							url: 'forget_password.html',
-							id: 'forget_password',
-							preload: true,
-							show: {
-								aniShow: 'pop-in'
-							},
-							styles: {
-								popGesture: 'hide'
-							},
-							waiting: {
-								autoShow: false
-							}
-						});
-					}, false);
+//					forgetButton.addEventListener('tap', function(event) {
+//						$.openWindow({
+//							url: 'forget_password.html',
+//							id: 'forget_password',
+//							preload: true,
+//							show: {
+//								aniShow: 'pop-in'
+//							},
+//							styles: {
+//								popGesture: 'hide'
+//							},
+//							waiting: {
+//								autoShow: false
+//							}
+//						});
+//					}, false);
 
 					var backButtonPress = 0;
 					$.back = function(event) {

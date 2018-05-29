@@ -7,6 +7,7 @@
 		
 		<link rel="stylesheet" href="../css/mui.min.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../css/loading.css" />
 		<style>
 			.mui-table{
 				width: 90%;
@@ -84,22 +85,22 @@
 		</div>
 		
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/loading.js"></script>
 		
 		<script>
 			const url='http://47.104.236.86/CollegeManager/api/course/courseTable'
 			mui.init()
 			
-			
-			
-			
 			mui('.mui-scroll-wrapper').scroll({
 				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
 			});
 			
+			mui.showLoading("正在獲取.","div");
 			mui.post(url,{
 					courseId:'30',
-					userId:'119'
-				},function(data){
+					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
+			},function(data){
+					
 					//拼接数据
 					var allData=data.data
 					var wapper=[[],[],[],[],[],[],[],[]]
@@ -129,7 +130,7 @@
 						}
 					}
 					
-					
+					mui.hideLoading()
 				},'json'
 			);
 			

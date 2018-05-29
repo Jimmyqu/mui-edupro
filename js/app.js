@@ -3,11 +3,15 @@
  * 当您要参考这个演示程序进行相关 app 的开发时，
  * 请注意将相关方法调整成 “基于服务端Service” 的实现。
  **/
+
 (function($, owner) {
+    const loginUrl='http://47.104.236.86/CollegeManager/api/index/login'
+
 	/**
 	 * 用户登录
 	 **/
 	owner.login = function(loginInfo, callback) {
+
 		callback = callback || $.noop;
 		loginInfo = loginInfo || {};
 		loginInfo.account = loginInfo.account || '';
@@ -19,14 +23,39 @@
 			return callback('密码最短为 6 个字符');
 		}
 		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		var authed = users.some(function(user) {
-			return loginInfo.account == user.account && loginInfo.password == user.password;
-		});
-		if (authed) {
-			return owner.createState(loginInfo.account, callback);
-		} else {
-			return callback('用户名或密码错误');
-		}
+		console.log(JSON.stringify(users))
+
+		//服務器交互
+
+		let loginState=false
+        mui.post(loginUrl,{
+				account:loginInfo.account,
+				password:hex_md5(loginInfo.password).toUpperCase()
+            },function(data){
+
+                if(data.code===0){
+                    mui.toast('登陆成功')
+                    localStorage.setItem('UserInfo', JSON.stringify(data.data)); //储存用户信息到本地
+                    console.log(localStorage.getItem('UserInfo'))
+                    loginState=true
+                    return owner.createState(loginInfo.account, callback);
+                }else if(data.code===1){
+                    loginState=false
+                    return callback('用户名或密码错误');
+                }
+            }
+        );
+
+
+		// var authed = users.some(function(user) {
+		// 	return loginInfo.account === user.account && loginInfo.password === user.password;
+		// });
+		//
+		// if (loginState) {
+		// 	return owner.createState(loginInfo.account, callback);
+		// } else {
+		// 	return callback('用户名或密码错误');
+		// }
 	};
 
 	owner.createState = function(name, callback) {
@@ -51,9 +80,7 @@
 		if (regInfo.password.length < 6) {
 			return callback('密码最短需要 6 个字符');
 		}
-		if (!checkEmail(regInfo.email)) {
-			return callback('邮箱地址不合法');
-		}
+
 		var users = JSON.parse(localStorage.getItem('$users') || '[]');
 		users.push(regInfo);
 		localStorage.setItem('$users', JSON.stringify(users));
@@ -109,7 +136,7 @@
 	owner.getSettings = function() {
 			var settingsText = localStorage.getItem('$settings') || "{}";
 			return JSON.parse(settingsText);
-		}
+		};
 		/**
 		 * 获取本地是否安装客户端
 		 **/

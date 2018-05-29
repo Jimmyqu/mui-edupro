@@ -47,6 +47,11 @@
 			.img-container p{
 				text-align: center;
 			}
+			#img-box img{
+				width: 120px;
+				height: 120px;
+				border-radius: 50%;
+			}
 		</style>
 	</head>
 	<body>
@@ -60,8 +65,8 @@
 								<img src="../images/user-photo.png" alt="" />
 							</div>
 							
-							<h4>name</h4>
-							<p>專業啊實打實</p>
+							<h4>姓名</h4>
+							<p>專業及班級</p>
 						</div>
 						<div>
 							<table class="mui-table">
@@ -92,11 +97,17 @@
 			mui('.mui-scroll-wrapper').scroll({
 				deceleration: 0.005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
 			});
+			let str=JSON.parse(localStorage.getItem('UserInfo'))['specialty']['name']+" "+JSON.parse(localStorage.getItem('UserInfo'))['grade']['name']
+
+			//讀取本地數據
+			mui('.img-container h4')[0].innerText=JSON.parse(localStorage.getItem('UserInfo'))['name']
+			mui('.img-container p')[0].innerText=str
+			mui('.img-container img')[0].src=JSON.parse(localStorage.getItem('UserInfo'))['profilePhoto']
 			
 			//數據
 			const scoreUrl ='http://47.104.236.86/CollegeManager/api/user/queryScore'
 			mui.post(scoreUrl,{
-					userId:'119'
+					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
 				},function(data){
 					let scoreData=data.data
 					let tbody=mui('#tbody')[0]

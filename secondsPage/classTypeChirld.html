@@ -350,7 +350,7 @@
 					mui.post(courseInfoUrl,
 					{
 					courseId:props.courseId,
-					userId:'119',
+					userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
 					
 					},
 					function(data){
@@ -373,13 +373,37 @@
 					mui.post(url,
 					{
 					courseId:props.courseId,
-					userId:'119',
+					userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
 					lon:114.354671,
 					lat:30.524188,
 					},
 					function(data){
 						mui.hideLoading()
-						console.log(JSON.stringify(data))
+						
+						let classData=data
+						if(classData.code===0){
+							mui.toast('打卡成功')
+						}else if(classData.code===1){
+							
+							if(classData.msg==='error_000'){
+				                mui.toast('服务器错误')
+				            }
+				            if(classData.msg==='error_015'){
+				                mui.toast('找不到该课程')
+				            }
+				            if(classData.msg==='error_005'){
+				                mui.toast('未到打卡时间')
+				            }
+				            if(classData.msg==='error_006'){
+				                mui.toast('签到时间已过')
+				            }
+				            if(classData.msg==='error_007'){
+				              	mui.toast('打卡地点不正确')
+				            }
+				            if(classData.msg==='error_014'){
+				                mui.toast('课程已经签到过')
+				            }
+						}
 					})	
 					
 				})
@@ -415,7 +439,7 @@
 					
 					if(question.value){
 						mui.post(rateUrl,{
-			    			userId:'119',
+			    			userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
 			    			courseId:props.courseId,
 							content:question.value,
 							score:starIndex

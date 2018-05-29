@@ -21,7 +21,15 @@
 			.mui-title{
 				color: #fff;
 			}
-			
+			#logo-content{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 20px 0;
+			}
+			#logo{
+				width: 50%;
+			}
 		</style>
 	</head>
 
@@ -57,7 +65,9 @@
 					<div class="mui-scroll">
 						<div style="margin-top: 45px;">
 							<div class="row" >
-								<p style="margin-top: 70px;">问题描述或建议:</p>
+								<div id='logo-content'>
+									<img id='logo' src="../images/logo.png" alt="" />
+								</div>
 							</div>
 							<div class="row mui-input-row">
 								<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
@@ -89,7 +99,7 @@
 			submit.addEventListener('click',function(){
 				if(question.value){
 					mui.post(feedbackUrl,{
-		    			userId:'119',
+		    			userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
 						content:question.value
 						},function(data){
 							console.log(JSON.stringify(data))
