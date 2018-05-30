@@ -96,7 +96,18 @@
 			});
 			
 			mui.showLoading("正在獲取.","div");
-			mui.post(url,{
+						//轮询是否有该参数
+			var timer=	setInterval(function(){
+				if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
+						getInfo()
+				}else{
+				 	clearInterval(timer)
+				 	getInfo()
+				}
+			},1000)
+			
+			function getInfo(){
+				mui.post(url,{
 					courseId:'30',
 					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
 			},function(data){
@@ -133,6 +144,8 @@
 					mui.hideLoading()
 				},'json'
 			);
+			}
+			
 			
 		
 			

@@ -22,26 +22,26 @@
 		if (loginInfo.password.length < 6) {
 			return callback('密码最短为 6 个字符');
 		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		console.log(JSON.stringify(users))
+//		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+//		console.log(JSON.stringify(users))
 
 		//服務器交互
-
-		let loginState=false
+        
+		
         mui.post(loginUrl,{
 				account:loginInfo.account,
 				password:hex_md5(loginInfo.password).toUpperCase()
             },function(data){
-
+                console.log(JSON.stringify(data))
                 if(data.code===0){
-                    mui.toast('登陆成功')
-                    localStorage.setItem('UserInfo', JSON.stringify(data.data)); //储存用户信息到本地
-                    console.log(localStorage.getItem('UserInfo'))
-                    loginState=true
-                    return owner.createState(loginInfo.account, callback);
+                	localStorage.setItem('UserInfo',JSON.stringify(data.data))
+                	 mui.toast('登陆成功')
+                	return owner.createState(loginInfo.account, callback);
+                   
                 }else if(data.code===1){
-                    loginState=false
-                    return callback('用户名或密码错误');
+                	mui.toast('登陆失败')
+                	return callback('用户名或密码错误');
+                    
                 }
             }
         );
@@ -50,8 +50,7 @@
 		// var authed = users.some(function(user) {
 		// 	return loginInfo.account === user.account && loginInfo.password === user.password;
 		// });
-		//
-		// if (loginState) {
+		// if (authed) {
 		// 	return owner.createState(loginInfo.account, callback);
 		// } else {
 		// 	return callback('用户名或密码错误');
@@ -80,9 +79,13 @@
 		if (regInfo.password.length < 6) {
 			return callback('密码最短需要 6 个字符');
 		}
-
+		
+		
+		//todo後臺交互
+		
 		var users = JSON.parse(localStorage.getItem('$users') || '[]');
 		users.push(regInfo);
+		console.log(JSON.stringify(users))
 		localStorage.setItem('$users', JSON.stringify(users));
 		return callback();
 	};

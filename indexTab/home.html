@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="../css/style.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 		<link rel="stylesheet" href="../css/iconfont.css" />
+		<link rel="stylesheet" href="../css/loading.css" />
 		<style>
 			.mui-preview-image.mui-fullscreen {
                 position: fixed;
@@ -217,7 +218,7 @@
 				font-size: 0.12rem;
 			} 
 			.class-item{
-				border-top: 1px solid #C0C0C0;
+				
 				padding: 0.1rem 0.3rem;
 				border-bottom: 1px solid #C0C0C0;
 			}
@@ -246,6 +247,7 @@
 				overflow: hidden;
 			}
 			.item-detail p{
+				font-size: 0.12rem;
 				word-wrap:break-word;
 				overflow : hidden;
 				text-overflow: ellipsis;
@@ -257,9 +259,22 @@
 				color: #2AC845;
 			}
 			.iconfont:after{
-				content: '1111';
+				content: attr(data-text);
 				color: #333333;
 				font-size: 11px;
+			}
+			.item-icons{
+				display: flex;
+				
+			}
+			#open-class{
+				padding: 0 0.1rem;
+			}
+			#open-class h4{
+				font-size: 0.15rem;
+			}
+			#open-class p{
+				font-size: 0.12rem;
 			}
 		</style>
 	</head>
@@ -275,42 +290,45 @@
 						    <div class="swiper-pagination"></div>
 						</div>
 					</div>
-					<div class="class-header">
+					<!--<div class="class-header">
 						<div>
-							[公開課程]
+							[公开课程]
 						</div>
 						<div class='all'>
 							全部课程 >
 						</div>
-					</div>
+					</div>-->
 
 					<div class='class-content'>
-						<img src="../images/weixin.png" alt="" />
-						<div>
-							<h4>asdsdasd</h5>
-							<p>asdasasdasdasasdasdjuashdiuhiucdubsiycgisuycggcuwegutsvfufasdasasdasdjuashdiuhiucdubsiycgisuycggcuwegutsvfufasdjuashdiuhiucdubsiycgisuycggcuwegutsvfufvustf</p>
+						<img src="../images/logo.png" alt="" />
+						
+							<div id='open-class'>
+							<h4>公共资源</h4>
+							<p>暂无资源</p>
 						</div>
+						
+						
 					</div>
 					<div class="class-header">
 						<div>
-							[今日課程]
+							[今日课程]
 						</div>
 						
 					</div>
-					<div id="todayClass">
+					<div id="todayClass" >
 						<div class='class-item'>
 							<div class="item-header">
 								<div class="item-name">
-									namenamenamenamenamename
+									课程名称
 								</div>
 								<div class="item-content">
-									課程内容
+									课程内容
 								</div>
 							</div>
 							<div class="item-detail">
-								<p>asdasasdasdasasdasdjuashdiuhiucdubsiycgisuycggcuwegutsvfufasdasasdasdjuashdiuhiucdubsiycgisuycggcuwegutsvfufasdjuashdiuhiucdubsiycgisuycggcuwegutsvfufvust
+								<p>暂无简介
 </p>							
-								<div >
+								<div class="item-icons">
 									<i class="iconfont icon-biaoji"></i>
 									<i class="iconfont icon-icon_didian_x"></i>
 								</div>
@@ -332,6 +350,7 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/mui.view.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>	
+		<script src="../js/loading.js"></script>
 		<script>
 			const swiperUrl = 'http://47.104.236.86/CollegeManager/api/index/noticeList'
 			const todayClassUrl ='http://47.104.236.86/CollegeManager/api/index/todayCourseList';
@@ -340,7 +359,7 @@
 			mui.init()	       
 			
 			mui('.mui-scroll-wrapper').scroll({
-				deceleration: 0.05 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+				deceleration: 0.005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
 			});
 			
 			//轮播图
@@ -384,13 +403,62 @@
 			
 			//儲存到localStorage的是字符串 必須先轉換再使用
 			//console.log(JSON.parse(localStorage.getItem('UserInfo'))['id'])
-			mui.post(todayClassUrl,{
-					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
-				},function(data){
-					console.log(JSON.stringify(data))
-				},'json'
-			);
 			
+			
+			//今日课程
+			mui.showLoading("正在獲取.","div");		
+			
+			//轮询是否有该参数
+			var timer=	setInterval(function(){
+				if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
+						getInfo()
+				}else{
+				 	clearInterval(timer)
+				 	getInfo()
+				}
+			},1000)
+			
+					
+			function getInfo(){
+					mui.post(todayClassUrl,{
+						userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
+					},function(data){
+						let classData=data.data
+						let todayClass=document.getElementById('todayClass')
+						let html=''
+						
+						for(let item of classData){
+								html+=`
+								<div class='class-item'  style='padding: 0.1rem 0.3rem;border-bottom: 1px solid #C0C0C0;'
+									data-title='${item.subject.name}' 
+									data-id='${item.id}' 
+								>
+									<div class="item-header" ">
+										<div class="item-name" >
+											${item.subject.name}
+										</div>
+										<div class="item-content">
+											課程内容
+										</div>
+									</div>
+									<div class="item-detail">
+										<p>${item.description}</p>							
+										<div >
+											<i class="iconfont icon-biaoji" data-text='第${item.turnNumber}节'></i>
+											<i class="iconfont icon-icon_didian_x" data-text='${item.address}'></i>
+										</div>
+									</div>
+								</div>
+								
+								`
+							}
+						todayClass.innerHTML=html
+						mui.hideLoading()
+					},'json'
+				);
+			}
+			
+			//今日课程end 
 			
 			mui.plusReady(function(){
 				
@@ -412,7 +480,23 @@
 				})
 				
 				
-				
+				//批量绑定事件 跳转课程详细页面
+				mui('#todayClass').on('tap','.class-item',function(){
+					//传递data-参数到子页面
+					let title=this.dataset.title
+					let courseId=this.dataset.id
+					 mui.openWindow({
+					     url: '../secondsPage/classTypeChirld.html',
+					     id:'classTypeCirld.html',
+						extras:{
+							classTitle:title,
+							courseId:courseId
+						},
+						 waiting:{
+					      autoShow:false,//自动显示等待框，默认为true
+					  }
+					});
+				})
 				
 				 // 获取图片地址列表  原生預覽圖
 				  const urls=[]

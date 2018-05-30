@@ -289,32 +289,46 @@
 				const url='http://47.104.236.86/CollegeManager/api/course/courseSign'
 				const infoUrl='http://47.104.236.86/CollegeManager/api/index/getInfo'
 				
-				//获取个人信息
-				mui.post(infoUrl,{
-						userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
-					},function(data){
-						
-						//console.log(JSON.stringify(data))
-						let infoData=data.data
-						let useData=[
-							infoData.name.trim(),
-							infoData.sex?'女':'男',
-							infoData.number,
-							infoData.institute['name'],
-							infoData.specialty['name'],
-							infoData.grade['name']
-						]
-						let itemList=document.getElementsByClassName('no-icon')
-						//设置data-text属性 伪元素content属性读取
-						for(let item in useData){
-							//console.log(useData[item])
-							itemList[item].dataset.text=useData[item]
-						}
-						//只能获取 不能更改
-						//console.log(window.getComputedStyle(itemList[0],':after').getPropertyValue('content'))
-						
-					},'json'
-				);
+				
+				//轮询是否有该参数
+				var timer=	setInterval(function(){
+					if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
+							getInfo()
+					}else{
+					 	clearInterval(timer)
+					 	getInfo()
+					}
+				},1000)
+				
+				function getInfo(){
+					//获取个人信息
+					mui.post(infoUrl,{
+							userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
+						},function(data){
+							
+							//console.log(JSON.stringify(data))
+							let infoData=data.data
+							let useData=[
+								infoData.name.trim(),
+								infoData.sex?'女':'男',
+								infoData.number,
+								infoData.institute['name'],
+								infoData.specialty['name'],
+								infoData.grade['name']
+							]
+							let itemList=document.getElementsByClassName('no-icon')
+							//设置data-text属性 伪元素content属性读取
+							for(let item in useData){
+								//console.log(useData[item])
+								itemList[item].dataset.text=useData[item]
+							}
+							//只能获取 不能更改
+							//console.log(window.getComputedStyle(itemList[0],':after').getPropertyValue('content'))
+							
+						},'json'
+					);
+				}
+				
 				
 				//关于子页面
 				mui('#about')[0].addEventListener('tap',function(){
@@ -358,6 +372,8 @@
 				})
 				
 				mui("#exit")[0].addEventListener('tap',function(){
+					 localStorage.clear()
+					 console.log(localStorage.getItem('UserInfo'))
 					 mui.openWindow({
 				     url: '../login.html',
 				     id:'login.html',

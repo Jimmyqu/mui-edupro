@@ -225,10 +225,11 @@
 							<img src="" alt="" />
 						</div>
 						<div id='classTeacher'>
+							
 							<ul class="mui-table-view" id='no-active'>
 							    <li class="mui-table-view-cell mui-media">
 							        <a href="javascript:;" >
-							            <img id='head' style="border-radius: 50%;" class="mui-media-object mui-pull-left" src="../images/user-photo.png">
+							            <img id='head' style="border-radius: 50%;" class="mui-media-object mui-pull-left" src="../images/user.png">
 							            <div class="mui-media-body" id='name'>
 							               		 
 							                <p class="mui-ellipsis"></p>
@@ -343,10 +344,8 @@
 				var props = plus.webview.currentWebview(); 
 				mui('#classTitle')[0].innerText=props.classTitle
 				
-				
-				
 				//獲取課程信息
-				mui.showLoading("正在獲取.","div"); //加载文字和类型，plus环境中类型为div时强制以div方式显示
+				mui.showLoading("正在获取.","div"); //加载文字和类型，plus环境中类型为div时强制以div方式显示
 					mui.post(courseInfoUrl,
 					{
 					courseId:props.courseId,
@@ -363,6 +362,7 @@
 						 mui('#dspText')[0].innerText=`${classInfo.description}`
 						mui('#name')[0].innerHTML=html
 						mui('#head')[0].src=classInfo.teacher.profilePhoto
+						
 						
 				})	
 				
