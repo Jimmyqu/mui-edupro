@@ -16,8 +16,8 @@
 		loginInfo = loginInfo || {};
 		loginInfo.account = loginInfo.account || '';
 		loginInfo.password = loginInfo.password || '';
-		if (loginInfo.account.length < 5) {
-			return callback('账号最短为 5 个字符');
+		if (loginInfo.account.length < 2) {
+			return callback('账号最短为 2 个字符');
 		}
 		if (loginInfo.password.length < 6) {
 			return callback('密码最短为 6 个字符');
@@ -27,15 +27,18 @@
 
 		//服務器交互
         
-		
+      
         mui.post(loginUrl,{
 				account:loginInfo.account,
 				password:hex_md5(loginInfo.password).toUpperCase()
             },function(data){
                 console.log(JSON.stringify(data))
                 if(data.code===0){
-                	localStorage.setItem('UserInfo',JSON.stringify(data.data))
-                	 mui.toast('登陆成功')
+//              	localStorage.setItem('UserPass',JSON.stringify(loginInfo))
+                 	localStorage.clear()
+                 	localStorage.setItem('UserInfo',JSON.stringify(data.data))
+                 	console.log(localStorage.getItem('UserInfo'))
+                	mui.toast('登陆成功')
                 	return owner.createState(loginInfo.account, callback);
                    
                 }else if(data.code===1){

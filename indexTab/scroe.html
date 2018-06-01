@@ -111,7 +111,7 @@
 				margin-bottom: 0.3rem;
 			}
 			.mui-table-view {
-				margin-top: 0.2rem;
+				
 			}
 			
 			.mui-table-view span.mui-pull-right {
@@ -137,8 +137,7 @@
 				background-color: #fff;
 			}
 			#img-item{
-				
-				 transform: rotate(90deg);
+				 border-radius: 50%;
 			}
 		</style>
 	</head>
@@ -150,10 +149,10 @@
 			
 		    <div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
-					<ul class="mui-table-view mui-table-view-chevron">
+					<ul class="mui-table-view mui-table-view-chevron" >
 							<li class="mui-table-view-cell mui-media ">
 								<a id='changeImg' class="mui-navigate-right changeImg" href="#" >
-									<img class="mui-media-object mui-pull-left head-img" id="img-item" src="">
+									<img class="mui-media-object mui-pull-left head-img" id="img-item" src="../images/user.png">
 									<div class="mui-media-body ">
 										test
 										<p class='mui-ellipsis '>hellomui</p>
@@ -163,7 +162,7 @@
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron" id='no-active'>
 							<li class="mui-table-view-cell">
-								<a href="#" class="mui-navigate-right no-icon">姓名</a>
+								<a href="#" class="mui-navigate-right no-icon" >姓名</a>
 							</li>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon">性别</a>
@@ -181,7 +180,7 @@
 								<a href="#" class="mui-navigate-right no-icon">班级</a>
 							</li>
 						</ul>
-						<ul class="mui-table-view mui-table-view-chevron">
+						<ul class="mui-table-view mui-table-view-chevron" >
 							<li class="mui-table-view-cell">
 								<a id='bind' href="#" class="mui-navigate-right">绑定手机</a>
 							</li>
@@ -192,10 +191,10 @@
 								<a id='class' href="#" class="mui-navigate-right">我的课程</a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a id='about' href="#" class="mui-navigate-right">用户反馈 <i class="mui-pull-right update">V3.1.0</i></a>
+								<a id='about' href="#" class="mui-navigate-right">用户反馈</a>
 							</li>
 						</ul>
-						<ul class="mui-table-view">
+						<ul class="mui-table-view" >
 							<li class="mui-table-view-cell" style="text-align: center;">
 								<a id='exit'>退出登录</a>
 							</li>
@@ -305,9 +304,20 @@
 					mui.post(infoUrl,{
 							userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
 						},function(data){
-							
+							 "use strict";
+							 
 							//console.log(JSON.stringify(data))
 							let infoData=data.data
+							
+							mui('#changeImg')[0].innerHTML=`
+							 	<img class="mui-media-object mui-pull-left head-img" id="img-item" src="${infoData.profilePhoto}">
+								<div class="mui-media-body ">
+									${infoData.name.trim()}
+									<p class='mui-ellipsis '>${infoData.mobile}</p>
+								</div>
+							 `
+							
+							
 							let useData=[
 								infoData.name.trim(),
 								infoData.sex?'女':'男',
@@ -324,6 +334,7 @@
 							}
 							//只能获取 不能更改
 							//console.log(window.getComputedStyle(itemList[0],':after').getPropertyValue('content'))
+							
 							
 						},'json'
 					);
@@ -374,13 +385,20 @@
 				mui("#exit")[0].addEventListener('tap',function(){
 					 localStorage.clear()
 					 console.log(localStorage.getItem('UserInfo'))
-					 mui.openWindow({
-				     url: '../login.html',
-				     id:'login.html',
-				      waiting:{
-					      autoShow:false,//自动显示等待框，默认为true
-					  }
-				  });
+					 console.log(plus.webview.all())
+					 var all= plus.webview.all()
+					
+//					 mui.openWindow({
+//				     url: '../login.html',
+//				     id:'login.html',
+//				      waiting:{
+//					      autoShow:false,//自动显示等待框，默认为true
+//					  }
+//				  });
+				   	for(let i in all){
+				   		 plus.webview.close(all[i]);
+					 }
+				  
 				})
 				
 				//end 

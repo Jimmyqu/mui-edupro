@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="font-size: 100px;">
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
@@ -186,17 +186,16 @@
 			}
 			.class-content{
 				display: flex;
-				height: 80px;
 				padding: 0 10px;
 				border-bottom: 1px gainsboro solid;
 			}
 			.class-content img{
-				width: 25%;
+				width: 0.8rem;
+				height: 0.8rem;
 			}
 			.class-content div{
 				width: 75%;
 				overflow: hidden;
-				
 			}
 			.class-content div p{
 				word-wrap:break-word;
@@ -218,7 +217,6 @@
 				font-size: 0.12rem;
 			} 
 			.class-item{
-				
 				padding: 0.1rem 0.3rem;
 				border-bottom: 1px solid #C0C0C0;
 			}
@@ -228,7 +226,7 @@
 				line-height: 0.3rem;
 			}
 			.item-name{
-				background-color: #2AC845;
+				background-color: #0d8ccf;
 				border-radius: 0.05rem;
 				width: 30%;
 				text-align: center;
@@ -240,12 +238,20 @@
 			
 			.item-content{
 				border-radius: 0.05rem;
-				background-color: #2AC845;
+				background-color: #cbcdcc;
 				width: 65%;
 				font-size: 0.12rem;
 				text-align: center;
 				overflow: hidden;
 			}
+			
+			.item-detail{
+				background-color: #f4fdec;
+				margin-top: 0.05rem;
+				padding: 0.05rem;
+				border-radius: 0.05rem;
+			}
+			
 			.item-detail p{
 				font-size: 0.12rem;
 				word-wrap:break-word;
@@ -254,12 +260,18 @@
 				display: -webkit-box;
 				-webkit-line-clamp: 2;
 				-webkit-box-orient: vertical;
+				background-color: ;
 			}
 			.iconfont{
 				color: #2AC845;
 			}
 			.iconfont:after{
 				content: attr(data-text);
+				color: #333333;
+				font-size: 11px;
+			}
+			.noclass:after{
+				content: '暂无信息';
 				color: #333333;
 				font-size: 11px;
 			}
@@ -276,6 +288,11 @@
 			#open-class p{
 				font-size: 0.12rem;
 			}
+			.swiper-container{
+				height: 2rem;
+				width: 100%;
+			}
+			
 		</style>
 	</head>
 	<body>
@@ -285,21 +302,25 @@
 					<div>
 						<div class="swiper-container">
 						    <div class="swiper-wrapper" id='imgBox'>
+						    	
 						    </div>
 						    <!-- 如果需要分页器 -->
-						    <div class="swiper-pagination"></div>
+						    
+						    <!--<div class="swiper-pagination">
+						    	
+						    </div>-->
 						</div>
 					</div>
-					<!--<div class="class-header">
+					<div class="class-header">
 						<div>
 							[公开课程]
 						</div>
 						<div class='all'>
 							全部课程 >
 						</div>
-					</div>-->
+					</div>
 
-					<div class='class-content'>
+					<div class='class-content' style="padding: 0.1rem 0.3rem;">
 						<img src="../images/logo.png" alt="" />
 						
 							<div id='open-class'>
@@ -316,24 +337,7 @@
 						
 					</div>
 					<div id="todayClass" >
-						<div class='class-item'>
-							<div class="item-header">
-								<div class="item-name">
-									课程名称
-								</div>
-								<div class="item-content">
-									课程内容
-								</div>
-							</div>
-							<div class="item-detail">
-								<p>暂无简介
-</p>							
-								<div class="item-icons">
-									<i class="iconfont icon-biaoji"></i>
-									<i class="iconfont icon-icon_didian_x"></i>
-								</div>
-							</div>
-						</div>
+						
 					</div>
 					<div>
 						<!--<video controls="controls" style="width: 100%;" poster="http://img.58cdn.com.cn/ui8/house/detail/images/newdefaultPic@2x.png?w=640&h=480&crop=1">
@@ -346,10 +350,10 @@
 			</div>		
 		</div>
 		
-		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/mui.view.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>	
+			
 		<script src="../js/loading.js"></script>
 		<script>
 			const swiperUrl = 'http://47.104.236.86/CollegeManager/api/index/noticeList'
@@ -365,6 +369,7 @@
 			//轮播图
 			mui.post(swiperUrl,{
 				},function(data){
+					 "use strict";
 					let imgData= data.data
 					let imgBox=document.getElementById('imgBox')
 					let dom=''
@@ -391,22 +396,24 @@
 					var mySwiper = new Swiper ('.swiper-container', {
 					    direction: 'horizontal',
 					    loop: true,
-					    
-					    // 如果需要分页器
-					    pagination: {
-					      el: '.swiper-pagination',
-					    },
+					    autoplay : true,
+        				
+//					    // 如果需要分页器
+//					    pagination: {
+//					      el: '.swiper-pagination',
+//					    },
 					}) 
 					//end
 				},'json'
 			);
+			
 			
 			//儲存到localStorage的是字符串 必須先轉換再使用
 			//console.log(JSON.parse(localStorage.getItem('UserInfo'))['id'])
 			
 			
 			//今日课程
-			mui.showLoading("正在獲取.","div");		
+			//mui.showLoading("正在獲取.","div");		
 			
 			//轮询是否有该参数
 			var timer=	setInterval(function(){
@@ -423,13 +430,15 @@
 					mui.post(todayClassUrl,{
 						userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
 					},function(data){
+						 "use strict";
 						let classData=data.data
-						let todayClass=document.getElementById('todayClass')
+						var todayClass=document.getElementById('todayClass')
 						let html=''
-						
-						for(let item of classData){
+						if(classData.length>0){
+							
+							for(let item of classData){
 								html+=`
-								<div class='class-item'  style='padding: 0.1rem 0.3rem;border-bottom: 1px solid #C0C0C0;'
+								<div class='class-item' '
 									data-title='${item.subject.name}' 
 									data-id='${item.id}' 
 								>
@@ -452,6 +461,30 @@
 								
 								`
 							}
+						}else{
+							html+=`
+								<div class='class-item'>
+									<div class="item-header">
+										<div class="item-name">
+											暂无课程
+										</div>
+										<div class="item-content">
+											课程内容
+										</div>
+									</div>
+									<div class="item-detail" >
+										<p>暂无简介</p>							
+										<div class="item-icons">
+											<i class="iconfont icon-biaoji noclass" '></i>
+											<i class="iconfont icon-icon_didian_x noclass"'></i>
+										</div>
+									</div>
+								</div>
+							`
+							
+							
+						}
+						
 						todayClass.innerHTML=html
 						mui.hideLoading()
 					},'json'
@@ -482,20 +515,26 @@
 				
 				//批量绑定事件 跳转课程详细页面
 				mui('#todayClass').on('tap','.class-item',function(){
+					 "use strict";
 					//传递data-参数到子页面
 					let title=this.dataset.title
 					let courseId=this.dataset.id
-					 mui.openWindow({
-					     url: '../secondsPage/classTypeChirld.html',
-					     id:'classTypeCirld.html',
-						extras:{
-							classTitle:title,
-							courseId:courseId
-						},
-						 waiting:{
-					      autoShow:false,//自动显示等待框，默认为true
-					  }
-					});
+					if(title){
+						 mui.openWindow({
+						     url: '../secondsPage/classTypeChirld.html',
+						     id:'classTypeCirld.html',
+							extras:{
+								classTitle:title,
+								courseId:courseId
+							},
+							 waiting:{
+						      autoShow:false,//自动显示等待框，默认为true
+						  }
+						});
+					}{
+						return false
+					}
+					
 				})
 				
 				 // 获取图片地址列表  原生預覽圖
@@ -510,7 +549,6 @@
 				  });
 				
 				function geoInf( position ) {
-
 					var codns = position.coords;//获取地理坐标信息；
 					var longt = codns.longitude;//获取到当前位置的经度
 					var lat = codns.latitude;//获取到当前位置的纬度；

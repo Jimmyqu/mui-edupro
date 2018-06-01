@@ -89,12 +89,20 @@
 				    <input id='password' type="text" placeholder="请输入密码">
 				</div>
 			</form>
-			
+			<form class="mui-input-group">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						自动登录
+						<div id="autoLogin" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+				</ul>
+			</form>
 			
 			<div class="mui-content-padded">
-				<button id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
-				<div class="link-area"><a id='reg'>注册账号</a> 
-				</div>
+				<button id='login' style="background-color: #fabe00; border: #fabe00;" class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+				<div class="link-area"><a id='reg'>注册账号</a> </div>
 			</div>
 			
 		</div>
@@ -110,6 +118,8 @@
 				});
 				$.plusReady(function() {
 					plus.screen.lockOrientation("portrait-primary");
+					var accountBox = doc.getElementById('account');
+					var passwordBox = doc.getElementById('password');
 					var settings = app.getSettings();
 					var state = app.getState();
 					var mainPage = plus.webview.getWebviewById("main");
@@ -122,6 +132,7 @@
 					}else{
 						main_loaded_flag = true;
 					}
+					
 					
 					mainPage.addEventListener("loaded",function () {
 						main_loaded_flag = true;
@@ -138,33 +149,37 @@
 						},20);
 					};
 					
+					//查看本地信息 和自动登录
 					
 					//检查 "登录状态/锁屏状态" 开始
-					if (settings.autoLogin && state.token) {
-						toMain();
-					} else {
+					if (settings.autoLogin==true && localStorage.getItem('UserPass')) {
 						
-					}
-					
-					
-					//
-					
+						toMain();
+					} 
 					
 					
 					// close splash
-					setTimeout(function() {
+//					setTimeout(function() {
 						//关闭 splash
 						plus.navigator.closeSplashscreen();
-					}, 600);
+//					}, 600);
 					
 					
 					//检查 "登录状态/锁屏状态" 结束
 					var loginButton = doc.getElementById('login');
-					var accountBox = doc.getElementById('account');
-					var passwordBox = doc.getElementById('password');
 					var autoLoginButton = doc.getElementById("autoLogin");
 					var regButton = doc.getElementById('reg');
 					var forgetButton = doc.getElementById('forgetPassword');
+					
+					autoLoginButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
+					autoLoginButton.addEventListener('toggle', function(event) {
+						setTimeout(function() {
+							var isActive = event.detail.isActive;
+							settings.autoLogin = isActive;
+							app.setSettings(settings);
+						}, 50);
+					}, false);
+					
 					
 					
 					loginButton.addEventListener('tap', function(event) {
@@ -177,6 +192,8 @@
 								plus.nativeUI.toast(err);
 								return;
 							}
+							
+							console.log('autoLogin '+settings.autoLogin)
 							toMain();
 						});
 					});

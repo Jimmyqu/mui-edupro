@@ -43,8 +43,8 @@
 					
 					<table class="mui-table">
 					    <thead class="mui-table-header">
-					        <tr style="background-color: #ABCDEF;">
-					        	<th>月份</th>
+					        <tr style="background-color: #C0C0C0;">
+					        	<th id='month'></th>
 					            <th>周一</th>
 					            <th>周二</th>
 					            <th>周三</th>
@@ -106,12 +106,13 @@
 				}
 			},1000)
 			
+			
 			function getInfo(){
 				mui.post(url,{
 					courseId:'30',
 					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
 			},function(data){
-					
+					 "use strict";
 					//拼接数据
 					var allData=data.data
 					var wapper=[[],[],[],[],[],[],[],[]]
@@ -151,8 +152,13 @@
 			
 			mui.plusReady(function() {
 				
+				//表头 月份
+				mui('#month')[0].innerText=new Date().getMonth()+1+"月"
+				
+				
 				//批量绑定事件 跳转子页面
 				mui('table').on('tap','.toClassDetail',function(){
+					 "use strict";
 					let title=this.innerText
 					let courseId=this.dataset.courseId
 					 mui.openWindow({
