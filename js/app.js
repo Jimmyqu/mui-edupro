@@ -32,12 +32,14 @@
 				account:loginInfo.account,
 				password:hex_md5(loginInfo.password).toUpperCase()
             },function(data){
-                console.log(JSON.stringify(data))
+               
                 if(data.code===0){
-//              	localStorage.setItem('UserPass',JSON.stringify(loginInfo))
-                 	localStorage.clear()
-                 	localStorage.setItem('UserInfo',JSON.stringify(data.data))
-                 	console.log(localStorage.getItem('UserInfo'))
+                	plus.storage.setItem('pass',JSON.stringify({
+                		account:loginInfo.account,
+						password:loginInfo.password
+                	}))
+                	plus.storage.setItem('newUserInfo',JSON.stringify(data.data))
+                	
                 	mui.toast('登陆成功')
                 	return owner.createState(loginInfo.account, callback);
                    

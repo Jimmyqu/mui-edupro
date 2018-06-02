@@ -98,10 +98,11 @@
 		
 		
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
 		
 		<script>
 			mui.init()
-		
+			console.log(3)
 			mui('.mui-scroll-wrapper').scroll({
 				deceleration: 0.005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
 			});
@@ -110,29 +111,14 @@
 			//數據
 			const scoreUrl ='http://47.104.236.86/CollegeManager/api/user/queryScore'
 			
-			//轮询是否有该参数
-			var timer=	setInterval(function(){
-				 "use strict";
-				if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
-						getInfo()
-				}else{
-					localStorage.clear()
-//				 	clearInterval(timer)
-//				 	console.log(localStorage.getItem('UserInfo'))
-//				 	let str=JSON.parse(localStorage.getItem('UserInfo'))['specialty']['name']+" "+JSON.parse(localStorage.getItem('UserInfo'))['grade']['name']
-//
-//					//讀取本地數據
-//					mui('.img-container img')[0].src=JSON.parse(localStorage.getItem('UserInfo'))['profilePhoto']
-//					mui('.img-container h4')[0].innerText=JSON.parse(localStorage.getItem('UserInfo'))['name']
-//					mui('.img-container p')[0].innerText=str
-//					
-				 	getInfo()
-				}
-			},1000)
+
+
 			
-			function getInfo(){
+			mui.plusReady(function(){
+				
+				function getInfo(){
 				mui.post(scoreUrl,{
-					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
+					userId:JSON.parse(second)['id']
 				},function(data){
 					 "use strict";
 					let scoreData=data.data
@@ -181,6 +167,85 @@
 				},'json'
 			);
 			}
+				
+				if(app.getSettings().autoLogin==true){
+					mui.post(scoreUrl,{
+					userId:JSON.parse(plus.storage.getItem('newUserInfo'))['id']
+				},function(data){
+					 "use strict";
+					let scoreData=data.data
+					var tbody=mui('#tbody')[0]
+					
+					for(let i in scoreData){
+						let tr=document.createElement('tr')
+						tr.className='tr'
+						for(let item in scoreData[i]){
+							if(item=='subject'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(scoreData[i][item]))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+
+						}
+						for(let item in scoreData[i]){
+							if(item=='peacetime'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(scoreData[i][item]))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+						}
+						
+						for(let item in scoreData[i]){
+							if(item=='midterm'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(scoreData[i][item]))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+						}
+						for(let item in scoreData[i]){
+							if(item=='midterm'){
+								let td=document.createElement('td')
+								td.appendChild(document.createTextNode(scoreData[i][item]))
+								tr.appendChild(td)
+								tbody.append(tr)
+							}
+						}
+						let str=JSON.parse(plus.storage.getItem('newUserInfo'))['specialty']['name']+" "+JSON.parse(plus.storage.getItem('newUserInfo'))['grade']['name']
+						mui('.img-container img')[0].src=JSON.parse(plus.storage.getItem('newUserInfo'))['profilePhoto']
+						mui('.img-container h4')[0].innerText=JSON.parse(plus.storage.getItem('newUserInfo'))['name']
+						mui('.img-container p')[0].innerText=str
+						
+					}
+				},'json'
+			);
+					
+				}
+				
+				var old=plus.storage.getItem('newUserInfo')
+				
+				var second
+					// mui.showLoading("正在獲取.","div");
+						//轮询是否有该参数
+				var timer=	setInterval(function(){
+					
+						if(old!==plus.storage.getItem('newUserInfo')){
+							second=plus.storage.getItem('newUserInfo')
+							console.log('change')
+							getInfo()
+						//讀取本地數據
+						let str=JSON.parse(second)['specialty']['name']+" "+JSON.parse(second)['grade']['name']
+						mui('.img-container img')[0].src=JSON.parse(second)['profilePhoto']
+						mui('.img-container h4')[0].innerText=JSON.parse(second)['name']
+						mui('.img-container p')[0].innerText=str
+							clearInterval(timer)
+						}
+				},1000)
+			})
+				
+			
 			
 			
 			

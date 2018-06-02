@@ -86,31 +86,23 @@
 		
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/loading.js"></script>
+		<script src="../js/app.js"></script>
 		
 		<script>
 			const url='http://47.104.236.86/CollegeManager/api/course/courseTable'
 			mui.init()
-			
+			console.log(2)
 			mui('.mui-scroll-wrapper').scroll({
 				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
 			});
 			
-			mui.showLoading("正在獲取.","div");
-						//轮询是否有该参数
-			var timer=	setInterval(function(){
-				if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
-						getInfo()
-				}else{
-				 	clearInterval(timer)
-				 	getInfo()
-				}
-			},1000)
+
 			
 			
 			function getInfo(){
 				mui.post(url,{
 					courseId:'30',
-					userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
+					userId:JSON.parse(plus.storage.getItem('newUserInfo'))['id']
 			},function(data){
 					 "use strict";
 					//拼接数据
@@ -152,6 +144,23 @@
 			
 			mui.plusReady(function() {
 				
+				if(app.getSettings().autoLogin==true){
+						console.log('autoLogin')
+						getInfo()
+					}
+				var old=plus.storage.getItem('newUserInfo')
+				
+					// mui.showLoading("正在獲取.","div");
+						//轮询是否有该参数
+					var timer=	setInterval(function(){
+							if(old!==plus.storage.getItem('newUserInfo')){
+								//console.log('change')
+								getInfo()
+								clearInterval(timer)
+							}
+					},1000)
+				
+				
 				//表头 月份
 				mui('#month')[0].innerText=new Date().getMonth()+1+"月"
 				
@@ -161,7 +170,8 @@
 					 "use strict";
 					let title=this.innerText
 					let courseId=this.dataset.courseId
-					 mui.openWindow({
+					if(title){
+						 mui.openWindow({
 					     url: '../secondsPage/classTypeChirld.html',
 					     id:'classTypeCirld.html',
 						extras:{
@@ -170,8 +180,12 @@
 						},
 						 waiting:{
 					      autoShow:false,//自动显示等待框，默认为true
-					  }
-					});
+						  }
+						});
+					}else{
+						return false
+					}
+					
 				})
 				
 			

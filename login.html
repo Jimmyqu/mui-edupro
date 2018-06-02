@@ -152,9 +152,23 @@
 					//查看本地信息 和自动登录
 					
 					//检查 "登录状态/锁屏状态" 开始
-					if (settings.autoLogin==true && localStorage.getItem('UserPass')) {
-						
-						toMain();
+					console.log(plus.storage.getItem('pass'))
+					console.log(Boolean(plus.storage.getItem('pass')))
+					if (settings.autoLogin==true && plus.storage.getItem('pass')) {
+						//toMain();
+						console.log(JSON.parse(plus.storage.getItem('pass')).account)
+						var loginInfo = {
+							account: JSON.parse(plus.storage.getItem('pass')).account,
+							password: JSON.parse(plus.storage.getItem('pass')).password
+						};
+						console.log(JSON.stringify(loginInfo))
+						app.login(loginInfo, function(err) {
+							if (err) {
+								plus.nativeUI.toast(err);
+								return;
+							}
+							toMain();
+						});
 					} 
 					
 					
@@ -192,8 +206,6 @@
 								plus.nativeUI.toast(err);
 								return;
 							}
-							
-							console.log('autoLogin '+settings.autoLogin)
 							toMain();
 						});
 					});

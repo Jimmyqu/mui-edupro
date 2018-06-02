@@ -130,14 +130,26 @@
 				font-size: 12px;
 			}
 			.no-icon:after{
-				content: attr(data-text);
-				font-size: 0.12rem;
+				content: '';
+				
 			}
 			#no-active .mui-active{
 				background-color: #fff;
 			}
 			#img-item{
 				 border-radius: 50%;
+			}
+			#no-active a{
+				display: inline-block;
+			}
+			#no-active li{
+				padding-right: 0.15rem;
+			}
+			#no-active span{
+				font-size: 0.12rem;
+				color: #797979;
+				display: inline-block;
+				float: right;
 			}
 		</style>
 	</head>
@@ -163,21 +175,27 @@
 						<ul class="mui-table-view mui-table-view-chevron" id='no-active'>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon" >姓名</a>
+								<span></span>
 							</li>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon">性别</a>
+								<span></span>
 							</li>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon">学号</a>
+								<span></span>
 							</li>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon">学院</a>
+								<span></span>
 							</li>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon">专业</a>
+								<span></span>
 							</li>
 							<li class="mui-table-view-cell">
 								<a href="#" class="mui-navigate-right no-icon">班级</a>
+								<span></span>
 							</li>
 						</ul>
 						<ul class="mui-table-view mui-table-view-chevron" >
@@ -206,6 +224,7 @@
 
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/loading.js"></script>
+		<script src="../js/app.js"></script>
 		<script type="text/javascript">
 		
 		
@@ -213,7 +232,7 @@
 
 			(function(){  
 				mui.init()
-				
+				console.log(4)
 				//初始化单页的区域滚动
 				mui('.mui-scroll-wrapper').scroll();
 		
@@ -288,21 +307,79 @@
 				const url='http://47.104.236.86/CollegeManager/api/course/courseSign'
 				const infoUrl='http://47.104.236.86/CollegeManager/api/index/getInfo'
 				
-				
-				//轮询是否有该参数
-				var timer=	setInterval(function(){
-					if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
-							getInfo()
-					}else{
-					 	clearInterval(timer)
-					 	getInfo()
+					if(app.getSettings().autoLogin==true){
+						console.log('autoLogin')
+							mui.post(infoUrl,{
+								userId:JSON.parse(plus.storage.getItem('newUserInfo'))['id']
+							},function(data){
+								 "use strict";
+								 
+								//console.log(JSON.stringify(data))
+								let infoData=data.data
+								
+								mui('#changeImg')[0].innerHTML=`
+								 	<img class="mui-media-object mui-pull-left head-img" id="img-item" src="${infoData.profilePhoto}">
+									<div class="mui-media-body ">
+										${infoData.name.trim()}
+										<p class='mui-ellipsis '>${infoData.mobile}</p>
+									</div>
+								 `
+								
+								
+								let useData=[
+									infoData.name.trim(),
+									infoData.sex?'女':'男',
+									infoData.number,
+									infoData.institute['name'],
+									infoData.specialty['name'],
+									infoData.grade['name']
+								]
+								let itemList=document.getElementsByTagName('span')
+								//设置data-text属性 伪元素content属性读取
+								for(let item in useData){
+									//console.log(useData[item])
+									
+									itemList[item].innerText=useData[item]
+								}
+								//只能获取 不能更改
+								//console.log(window.getComputedStyle(itemList[0],':after').getPropertyValue('content'))
+								
+								
+							},'json'
+						);
 					}
-				},1000)
+					
+					var old=plus.storage.getItem('newUserInfo')
+					//console.log("old========"+JSON.stringify(old))
+					var second
+						// mui.showLoading("正在獲取.","div");
+							//轮询是否有该参数
+					var timer=	setInterval(function(){
+							if(old!==plus.storage.getItem('newUserInfo')){
+								second=plus.storage.getItem('newUserInfo')
+								//console.log('change')
+								getInfo()
+								clearInterval(timer)
+							}
+					},1000)
 				
+				
+				
+				
+//				//轮询是否有该参数
+//				var timer=	setInterval(function(){
+//					if(JSON.parse(localStorage.getItem('UserInfo'))['id']==null){
+//							getInfo()
+//					}else{
+//					 	clearInterval(timer)
+//					 	getInfo()
+//					}
+//				},1000)
+//				
 				function getInfo(){
 					//获取个人信息
 					mui.post(infoUrl,{
-							userId:JSON.parse(localStorage.getItem('UserInfo'))['id']
+							userId:JSON.parse(second)['id']
 						},function(data){
 							 "use strict";
 							 
@@ -326,12 +403,13 @@
 								infoData.specialty['name'],
 								infoData.grade['name']
 							]
-							let itemList=document.getElementsByClassName('no-icon')
-							//设置data-text属性 伪元素content属性读取
-							for(let item in useData){
-								//console.log(useData[item])
-								itemList[item].dataset.text=useData[item]
-							}
+							let itemList=document.getElementsByTagName('span')
+
+								//设置data-text属性 伪元素content属性读取
+								for(let item in useData){
+									//console.log(useData[item])
+									itemList[item].innerText=useData[item]
+								}
 							//只能获取 不能更改
 							//console.log(window.getComputedStyle(itemList[0],':after').getPropertyValue('content'))
 							
@@ -383,9 +461,10 @@
 				})
 				
 				mui("#exit")[0].addEventListener('tap',function(){
-					 localStorage.clear()
-					 console.log(localStorage.getItem('UserInfo'))
-					 console.log(plus.webview.all())
+					 plus.storage.clear()
+					 
+					 app.setSettings({autoLogin:false})
+					
 					 var all= plus.webview.all()
 					
 //					 mui.openWindow({
