@@ -169,7 +169,7 @@
 				width: 60px;
 			}
 			#dspText{
-				height: 150px;
+				height: 100px;
 			}
 			.mui-btn-blue{
 				background-color: #0099CC;
@@ -354,7 +354,7 @@
 					},
 					function(data){
 						mui.hideLoading()
-						
+						console.log(data.data)
 						let classInfo=data.data
 						
 						let html=`${classInfo.teacher.name}
@@ -439,7 +439,7 @@
 					
 					if(question.value){
 						mui.post(rateUrl,{
-			    			userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
+			    			userId:JSON.parse(plus.storage.getItem('UserInfo'))['id'],
 			    			courseId:props.courseId,
 							content:question.value,
 							score:starIndex
