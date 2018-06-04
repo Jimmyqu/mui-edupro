@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html style="font-size: 100px;">
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		
+		<script src="../js/flex.js"></script>
 		<link rel="stylesheet" href="../css/mui.min.css" />
 		<link rel="stylesheet" href="../css/style.css" />
 		<link rel="stylesheet" href="../css/loading.css" />
@@ -139,7 +139,7 @@
 				width: 200px;
 				overflow: hidden;
 			}
-			#classDesper{
+			.classDesper{
 				background-color: #FFFFFF;
 				padding: 25px 15px;
 			}
@@ -189,6 +189,10 @@
 				color: #FFB400;
 				font-size: 22px;
 			} 
+			.classImg{
+				width: 100%;
+				height: 2rem;
+			}
 		</style>
 	</head>
 	
@@ -221,14 +225,14 @@
 				<!--添加滚动容器-->
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll">
-						<div id=classImg>
-							<img src="" alt="" />
+						<div >
+							<img class='classImg' src="" alt="" />
 						</div>
 						<div id='classTeacher'>
 							
 							<ul class="mui-table-view" id='no-active'>
 							    <li class="mui-table-view-cell mui-media">
-							        <a href="javascript:;" >
+							        <a href="#personDetail" class="mui-navigate-right" >
 							            <img id='head' style="border-radius: 50%;" class="mui-media-object mui-pull-left" src="../images/user.png">
 							            <div class="mui-media-body" id='name'>
 							               		 
@@ -239,7 +243,7 @@
 						
 							</ul>
 						</div>
-						<div id='classDesper'>
+						<div class='classDesper'>
 							<p id='dspText'>
 							</p>
 							<div class="btn-grounp">
@@ -267,12 +271,14 @@
 					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
 						<span class="mui-icon mui-icon-left-nav"></span>返回
 					</button>
-					<h1 class="mui-center mui-title" style="">課程評價</h1>
+					<h1 class="mui-center mui-title" style="">课程评价</h1>
 				</div>
 				<div class="mui-page-content">
-					
+					<div >
+						<img class='classImg' src="" alt="" />
+					</div>
 					<div class="row">
-						<h5>請對該課程提出評價及建議</h5>
+						<h5>请对该课程提出评价或建议</h5>
 					</div>
 					<div class="row mui-input-row">
 						<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
@@ -294,18 +300,53 @@
 				</div>
 		</div>
 
-		<!--feedback deeper singo page-->
-		<!--<div id="feedbackDeeper" class="mui-page feedback">
+		<!--teacher detail singo page-->
+		<div id="personDetail" class="mui-page feedback">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
-					<span class="mui-icon mui-icon-left-nav"></span>设置
+					<span class="mui-icon mui-icon-left-nav"></span>返回
 				</button>
-				<h1 class="mui-center mui-title">feedback deeper</h1>
+				<h1 class="mui-center mui-title">教师详情</h1>
 			</div>
 			<div class="mui-page-content">
-				<p>feedback deeper</p>
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div style="background-color: #fff;">
+							<img style="object-fit: contain;" class='classImg' src="" alt="" />
+						</div>
+						<div id='classTeacher'>
+							
+							<ul class="mui-table-view" id='no-active'>
+							    <li class="mui-table-view-cell mui-media" style="display: flex;justify-content: space-between;align-items: center;">
+							        <a href="#" class="mui-inline" style="">
+							            <div class="mui-media-body" id='name2'>
+							               		 
+							                <p class="mui-ellipsis"></p>
+							            </div>
+							        </a>
+							        <div class="icons mui-inline" >
+										<i data-index="1" class="mui-icon mui-icon-star star"></i>
+										<i data-index="2" class="mui-icon mui-icon-star star"></i>
+										<i data-index="3" class="mui-icon mui-icon-star star"></i>
+										<i data-index="4" class="mui-icon mui-icon-star star"></i>
+										<i data-index="5" class="mui-icon mui-icon-star star"></i>
+									</div>
+							    </li>
+						
+							</ul>
+						</div>
+						<div class='classDesper'>
+							<h4>[教师简介]</h4>
+							<p id='personText'>
+							</p>
+							
+						</div>
+						
+					
+					</div>
+				</div>
 			</div>
-		</div>-->
+		</div>
 
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/mui.view.js"></script>
@@ -328,6 +369,7 @@
 				const courseInfoUrl='http://47.104.236.86/CollegeManager/api/course/courseInfo';
 				const rateUrl='http://47.104.236.86/CollegeManager/api/course/courseEvaluate'
 				const url='http://47.104.236.86/CollegeManager/api/course/courseSign'
+				const teacherInfo='http://47.104.236.86/CollegeManager/api/teacher/teacherInfo'
 				//判断是否在子页面 返回键
 				var oldBack = mui.back;
 				var view = viewApi.view;
@@ -349,21 +391,41 @@
 					mui.post(courseInfoUrl,
 					{
 					courseId:props.courseId,
-					userId:JSON.parse(localStorage.getItem('UserInfo'))['id'],
+					userId:JSON.parse(plus.storage.getItem('newUserInfo'))['id']
 					
 					},
 					function(data){
 						mui.hideLoading()
 						console.log(data.data)
 						let classInfo=data.data
-						
+						console.log(JSON.stringify(classInfo.teacher.id))
+						mui('.classImg')[0].src=classInfo.image.url
+						mui('.classImg')[1].src=classInfo.image.url
 						let html=`${classInfo.teacher.name}
 						 <p class="mui-ellipsis">${classInfo.teacher.place}</p>`
 						 mui('#dspText')[0].innerText=`${classInfo.description}`
 						mui('#name')[0].innerHTML=html
+						mui('#name2')[0].innerHTML=html
 						mui('#head')[0].src=classInfo.teacher.profilePhoto
 						
-						
+						mui.post(teacherInfo,
+							{teacherId:classInfo.teacher.id},
+							function(data){
+								console.log(JSON.stringify(data))
+								console.log(data)
+								
+								mui('.classImg')[2].src=data.data.profilePhoto
+								mui('#personText')[0].innerText=data.data.description
+								let score=data.data.score
+								let stars=document.getElementsByClassName('star')
+								
+								for(let i in stars){
+									if(i<score){
+										stars[i].classList.add('mui-icon-star-filled');
+									}
+								}
+							}
+						)
 				})	
 				
 				
